@@ -1,5 +1,6 @@
 package me.wcy.music.executor;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
@@ -36,14 +37,31 @@ public class NaviMenuExecutor {
                 timerDialog();
                 return true;
             case R.id.action_exit:
-                activity.finish();
-                PlayService.startCommand(activity, Actions.ACTION_STOP);
+                exit();
                 return true;
             case R.id.action_about:
                 startActivity(AboutActivity.class);
                 return true;
         }
         return false;
+    }
+
+    private void exit() {
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.menu_is_exit)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        activity.finish();
+                        PlayService.startCommand(activity, Actions.ACTION_STOP);
+                    }
+                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     private void startActivity(Class<?> cls) {

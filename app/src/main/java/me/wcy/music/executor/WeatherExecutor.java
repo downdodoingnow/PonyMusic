@@ -69,6 +69,8 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     private Context mContext;
     @Bind(R.id.ll_weather)
     private LinearLayout llWeather;
+    @Bind(R.id.ll_refresh)
+    private LinearLayout ll_refresh;
     @Bind(R.id.iv_weather_icon)
     private ImageView ivIcon;
     @Bind(R.id.tv_weather_temp)
@@ -77,6 +79,7 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     private TextView tvCity;
     @Bind(R.id.tv_weather_wind)
     private TextView tvWind;
+
 
     public WeatherExecutor(Context context, View navigationHeader) {
         mContext = context.getApplicationContext();
@@ -101,9 +104,10 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
             AppCache.get().setAMapLocalWeatherLive(aMapLocalWeatherLive);
             updateView(aMapLocalWeatherLive);
         } else {
-            Log.e(TAG, "获取天气预报失败");
+            llWeather.setVisibility(View.INVISIBLE);
+            ll_refresh.setVisibility(View.VISIBLE);
+            Log.e(TAG, "获取天气预报失败  " + aMapLocalWeatherLive.getAMapException().getErrorMessage());
         }
-
         release();
     }
 
@@ -113,6 +117,7 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
 
     private void updateView(AMapLocalWeatherLive aMapLocalWeatherLive) {
         llWeather.setVisibility(View.VISIBLE);
+        ll_refresh.setVisibility(View.INVISIBLE);
         ivIcon.setImageResource(getWeatherIcon(aMapLocalWeatherLive.getWeather()));
         tvTemp.setText(mContext.getString(R.string.weather_temp, aMapLocalWeatherLive.getTemperature()));
         tvCity.setText(aMapLocalWeatherLive.getCity());

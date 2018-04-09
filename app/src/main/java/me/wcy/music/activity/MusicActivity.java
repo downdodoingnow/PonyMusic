@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -217,6 +218,12 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     public void onBackPressed() {
+        //将该Activity设置为主Activity
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+
         if (mPlayFragment != null && isPlayFragmentShow) {
             hidePlayingFragment();
             return;
@@ -225,8 +232,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
             drawerLayout.closeDrawers();
             return;
         }
-
-        super.onBackPressed();
     }
 
     @SuppressLint("MissingSuperCall")

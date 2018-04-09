@@ -16,7 +16,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("wangchenyan.keystore")
+            storeFile file("debug.keystore")
             storePassword getLocalValue("STORE_PASSWORD")
             keyAlias getLocalValue("KEY_ALIAS")
             keyPassword getLocalValue("KEY_PASSWORD")

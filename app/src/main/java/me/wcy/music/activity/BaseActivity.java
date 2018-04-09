@@ -31,7 +31,8 @@ import me.wcy.music.utils.binding.ViewBinder;
 
 /**
  * 基类<br>
- * 如果继承本类，需要在 layout 中添加 {@link Toolbar} ，并将 AppTheme 继承 Theme.AppCompat.NoActionBar 。
+ * 如果继承本类，需要在 layout 中添加 {@link Toolbar} ，并将 AppTheme 继承 Theme.AppCompat.NoActionBar
+ * 其中包括进度条，将菜单栏设置为透明以及全局播放音乐的Service
  */
 public abstract class BaseActivity extends AppCompatActivity {
     protected Handler handler;
@@ -76,6 +77,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         initView();
     }
 
+    /**
+     * 设置ToolBar,也就是App中的菜单栏
+     */
     private void initView() {
         ViewBinder.bind(this);
 
@@ -112,6 +116,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onServiceBound() {
     }
 
+    /**
+     * 设置手机状态栏为透明状态，Android5.0以上和以下设置有区别
+     */
     private void setSystemBarTransparent() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             // LOLLIPOP解决方案
@@ -124,6 +131,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 菜单栏
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -154,6 +167,13 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 申请运行时权限成功后进行回调
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

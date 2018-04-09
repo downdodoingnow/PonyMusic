@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">波尼音乐</string>
+    <string name="app_name">索拉音乐</string>
     <string name="sure">确定</string>
     <string name="cancel">取消</string>
     <string name="share">分享</string>
@@ -42,9 +42,10 @@
     <string name="search_empty">未找到相关结果</string>
     <string name="menu_setting">功能设置</string>
     <string name="menu_share">推荐给朋友</string>
-    <string name="menu_about">关于波尼音乐</string>
+    <string name="menu_about">关于索拉音乐</string>
     <string name="menu_night">夜间模式</string>
     <string name="menu_timer">定时停止播放</string>
+    <string name="menu_is_exit">是否退出应用</string>
     <string name="menu_exit">退出应用</string>
     <string name="network">网络</string>
     <string name="mobile_network_play">使用移动网络播放</string>
