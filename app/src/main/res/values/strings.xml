@@ -75,4 +75,7 @@
     <string name="grant_permission_setting">授权成功，请在再次操作以设置铃声</string>
     <string name="no_permission_select_image">没有权限，无法选择图片！</string>
     <string name="activity_playlist">播放列表</string>
+    <string name="forcast_weather">天气预报</string>
+    <string name="is_delete_all">是否清空历史</string>
+    <string name="is_delete">是否删除</string>
 </resources>

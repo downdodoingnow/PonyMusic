@@ -1,7 +1,12 @@
 package me.wcy.music.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.View;
@@ -14,9 +19,11 @@ import android.widget.TextView;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import me.wcy.music.R;
+import me.wcy.music.adapter.HistorySearchAdapter;
 import me.wcy.music.adapter.OnMoreClickListener;
 import me.wcy.music.adapter.SearchMusicAdapter;
 import me.wcy.music.enums.LoadStateEnum;
@@ -25,9 +32,13 @@ import me.wcy.music.executor.PlaySearchedMusic;
 import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.http.HttpCallback;
 import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.HistorySearch;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SearchMusic;
 import me.wcy.music.service.AudioPlayer;
+import me.wcy.music.storage.db.HistorySearchDBManager;
+import me.wcy.music.storage.db.greendao.HistorySearchDao;
+import me.wcy.music.utils.AlertDialogUtils;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.ViewUtils;
@@ -37,12 +48,19 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         , AdapterView.OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_search_music_list)
     private ListView lvSearchMusic;
+    @Bind(R.id.history_list)
+    private RecyclerView historyList;
+    @Bind(R.id.search_history_ll)
+    private LinearLayout searchHistoryll;
     @Bind(R.id.ll_loading)
     private LinearLayout llLoading;
     @Bind(R.id.ll_load_fail)
     private LinearLayout llLoadFail;
     private List<SearchMusic.Song> searchMusicList = new ArrayList<>();
     private SearchMusicAdapter mAdapter = new SearchMusicAdapter(searchMusicList);
+
+    private List<HistorySearch> mData;
+    private HistorySearchAdapter mHistorySearchAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +76,46 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
 
         lvSearchMusic.setOnItemClickListener(this);
         mAdapter.setOnMoreClickListener(this);
+
+        initHistory();
+    }
+
+    private void initHistory() {
+        mData = HistorySearchDBManager.getInstance().getmHistorySearchDao().queryBuilder().list();
+        if (0 != mData.size()) {
+            searchHistoryll.setVisibility(View.VISIBLE);
+
+            //让数据倒序排列
+            Collections.reverse(mData);
+            mHistorySearchAdapter = new HistorySearchAdapter(this, mData, searchHistoryll);
+            LinearLayoutManager manager = new LinearLayoutManager(this);
+            manager.setOrientation(OrientationHelper.VERTICAL);
+            historyList.setLayoutManager(manager);
+            historyList.setAdapter(mHistorySearchAdapter);
+            //增加条目或者删除条目的动画效果
+            historyList.setItemAnimator(new DefaultItemAnimator());
+
+            mHistorySearchAdapter.setOnItemClick(new HistorySearchAdapter.onItemClick() {
+                @Override
+                public void onItemClick(int position) {
+                    searchMusic(mData.get(position).getName());
+                }
+            });
+        }
+    }
+
+    public void deleteHistoryClick(View view) {
+
+        new AlertDialogUtils(this, new AlertDialogUtils.IConfirmCallBack() {
+            @Override
+            public void operate(DialogInterface dialog) {
+                HistorySearchDBManager.getInstance().getmHistorySearchDao().deleteAll();
+                dialog.dismiss();
+                mData.clear();
+                mHistorySearchAdapter.notifyDataSetChanged();
+                searchHistoryll.setVisibility(View.GONE);
+            }
+        }).build(R.string.is_delete_all);
     }
 
     @Override
@@ -89,7 +147,19 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
     public boolean onQueryTextSubmit(String query) {
         ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
         searchMusic(query);
+        addHistoryToDatabase(query);
         return false;
+    }
+
+    private void addHistoryToDatabase(String name) {
+        HistorySearch historySearch = new HistorySearch();
+        historySearch.setName(name);
+        HistorySearchDao historySearchDao = HistorySearchDBManager.getInstance().getmHistorySearchDao();
+        List<HistorySearch> data = historySearchDao.queryBuilder().where(HistorySearchDao.Properties.Name.eq(name)).list();
+        //防止用户搜索已经搜索的内容而重复显示
+        if (data.size() == 0) {
+            HistorySearchDBManager.getInstance().getmHistorySearchDao().insert(historySearch);
+        }
     }
 
     @Override
@@ -97,7 +167,10 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
         return false;
     }
 
-    private void searchMusic(String keyword) {
+    public void searchMusic(String keyword) {
+        //隐藏搜索历史
+        searchHistoryll.setVisibility(View.GONE);
+
         HttpClient.searchMusic(keyword, new HttpCallback<SearchMusic>() {
             @Override
             public void onSuccess(SearchMusic response) {
@@ -106,6 +179,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
                     return;
                 }
                 ViewUtils.changeViewState(lvSearchMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+
                 searchMusicList.clear();
                 searchMusicList.addAll(response.getSong());
                 mAdapter.notifyDataSetChanged();

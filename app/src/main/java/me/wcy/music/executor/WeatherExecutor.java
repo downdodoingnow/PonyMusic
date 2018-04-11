@@ -1,21 +1,31 @@
 package me.wcy.music.executor;
 
+
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.amap.api.location.AMapLocalWeatherForecast;
-import com.amap.api.location.AMapLocalWeatherListener;
-import com.amap.api.location.AMapLocalWeatherLive;
-import com.amap.api.location.LocationManagerProxy;
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.services.weather.LocalWeatherForecastResult;
+import com.amap.api.services.weather.LocalWeatherLive;
+import com.amap.api.services.weather.LocalWeatherLiveResult;
+import com.amap.api.services.weather.WeatherSearch;
+import com.amap.api.services.weather.WeatherSearchQuery;
 
 import java.util.Calendar;
 
 import me.wcy.music.R;
+import me.wcy.music.activity.ForcastWeatherActivity;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.utils.binding.Bind;
 import me.wcy.music.utils.binding.ViewBinder;
@@ -64,9 +74,10 @@ import me.wcy.music.utils.binding.ViewBinder;
  * 轻霾
  * 霾
  */
-public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
+public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearchListener, AMapLocationListener, View.OnClickListener {
     private static final String TAG = "WeatherExecutor";
     private Context mContext;
+    private Context mActivity;
     @Bind(R.id.ll_weather)
     private LinearLayout llWeather;
     @Bind(R.id.ll_refresh)
@@ -80,52 +91,118 @@ public class WeatherExecutor implements IExecutor, AMapLocalWeatherListener {
     @Bind(R.id.tv_weather_wind)
     private TextView tvWind;
 
+    private String mLocation;
 
     public WeatherExecutor(Context context, View navigationHeader) {
         mContext = context.getApplicationContext();
+        this.mActivity = context;
         ViewBinder.bind(this, navigationHeader);
+        init();
+    }
+
+    public void init() {
+        llWeather.setOnClickListener(this);
+        ll_refresh.setOnClickListener(this);
     }
 
     @Override
-    public void execute() {
-        AMapLocalWeatherLive aMapLocalWeatherLive = AppCache.get().getAMapLocalWeatherLive();
-        if (aMapLocalWeatherLive != null) {
-            updateView(aMapLocalWeatherLive);
-            release();
-        } else {
-            LocationManagerProxy mLocationManagerProxy = LocationManagerProxy.getInstance(mContext);
-            mLocationManagerProxy.requestWeatherUpdates(LocationManagerProxy.WEATHER_TYPE_LIVE, this);
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_weather:
+                Intent intent = new Intent(mActivity, ForcastWeatherActivity.class);
+                intent.putExtra("location", mLocation);
+                mActivity.startActivity(intent);
+                break;
+            case R.id.ll_refresh:
+                break;
+            default:
+                break;
         }
     }
 
     @Override
-    public void onWeatherLiveSearched(AMapLocalWeatherLive aMapLocalWeatherLive) {
-        if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
-            AppCache.get().setAMapLocalWeatherLive(aMapLocalWeatherLive);
-            updateView(aMapLocalWeatherLive);
+    public void execute() {
+//        LocalWeatherLive aMapLocalWeatherLive = AppCache.get().getAMapLocalWeatherLive();
+//        if (aMapLocalWeatherLive != null) {
+//            updateView(aMapLocalWeatherLive);
+//            release();
+//        } else {
+//            LocationManagerProxy mLocationManagerProxy = LocationManagerProxy.getInstance(mContext);
+//            mLocationManagerProxy.requestWeatherUpdates(LocationManagerProxy.WEATHER_TYPE_LIVE, this);
+
+        //获取位置信息
+        AMapLocationClient locationClient = new AMapLocationClient(mContext);
+        locationClient.setLocationListener(this);
+        AMapLocationClientOption locationOption = new AMapLocationClientOption();
+        // 设置定位模式为低功耗模式
+        locationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+        locationOption.setNeedAddress(true);
+        //只定位一次
+        locationOption.setOnceLocation(true);
+        // 设置定位参数
+        locationClient.setLocationOption(locationOption);
+        // 启动定位
+        locationClient.startLocation();
+//        }
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        mLocation = aMapLocation.getCity();
+        WeatherSearchQuery mquery = new WeatherSearchQuery(mLocation, WeatherSearchQuery.WEATHER_TYPE_LIVE);
+        WeatherSearch mweathersearch = new WeatherSearch(mActivity);
+        mweathersearch.setOnWeatherSearchListener(this);
+        mweathersearch.setQuery(mquery);
+        mweathersearch.searchWeatherAsyn(); //异步搜索
+    }
+
+    @Override
+    public void onWeatherLiveSearched(LocalWeatherLiveResult localWeatherLiveResult, int i) {
+        if (null != localWeatherLiveResult) {
+            LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
+            AppCache.get().setAMapLocalWeatherLive(weatherLive);
+            updateView(weatherLive);
         } else {
             llWeather.setVisibility(View.INVISIBLE);
             ll_refresh.setVisibility(View.VISIBLE);
-            Log.e(TAG, "获取天气预报失败  " + aMapLocalWeatherLive.getAMapException().getErrorMessage());
+            Log.e(TAG, "获取天气预报失败");
         }
         release();
     }
 
     @Override
-    public void onWeatherForecaseSearched(AMapLocalWeatherForecast aMapLocalWeatherForecast) {
-    }
+    public void onWeatherForecastSearched(LocalWeatherForecastResult localWeatherForecastResult, int i) {
 
-    private void updateView(AMapLocalWeatherLive aMapLocalWeatherLive) {
+    }
+//    @Override
+//    public void onWeatherLiveSearched(AMapLocalWeatherLive aMapLocalWeatherLive) {
+//        if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
+//            AppCache.get().setAMapLocalWeatherLive(aMapLocalWeatherLive);
+//            updateView(aMapLocalWeatherLive);
+//        } else {
+//            llWeather.setVisibility(View.INVISIBLE);
+//            ll_refresh.setVisibility(View.VISIBLE);
+//            Log.e(TAG, "获取天气预报失败  " + aMapLocalWeatherLive.getAMapException().getErrorMessage());
+//        }
+//        release();
+//    }
+//
+//    @Override
+//    public void onWeatherForecaseSearched(AMapLocalWeatherForecast aMapLocalWeatherForecast) {
+//    }
+
+    private void updateView(LocalWeatherLive aMapLocalWeatherLive) {
         llWeather.setVisibility(View.VISIBLE);
         ll_refresh.setVisibility(View.INVISIBLE);
+
         ivIcon.setImageResource(getWeatherIcon(aMapLocalWeatherLive.getWeather()));
         tvTemp.setText(mContext.getString(R.string.weather_temp, aMapLocalWeatherLive.getTemperature()));
         tvCity.setText(aMapLocalWeatherLive.getCity());
-        tvWind.setText(mContext.getString(R.string.weather_wind, aMapLocalWeatherLive.getWindDir(),
+        tvWind.setText(mContext.getString(R.string.weather_wind, aMapLocalWeatherLive.getWindDirection(),
                 aMapLocalWeatherLive.getWindPower(), aMapLocalWeatherLive.getHumidity()));
     }
 
-    private int getWeatherIcon(String weather) {
+    public static int getWeatherIcon(String weather) {
         if (TextUtils.isEmpty(weather)) {
             return R.drawable.ic_weather_sunny;
         }

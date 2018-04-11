@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
-import com.amap.api.location.AMapLocalWeatherLive;
+import com.amap.api.services.weather.LocalWeatherLive;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,8 @@ import java.util.List;
 import me.wcy.music.executor.DownloadMusicInfo;
 import me.wcy.music.model.Music;
 import me.wcy.music.model.SheetInfo;
-import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.storage.preference.Preferences;
+import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.ToastUtils;
 
@@ -26,7 +26,7 @@ public class AppCache {
     private final List<SheetInfo> mSheetList = new ArrayList<>();
     private final List<Activity> mActivityStack = new ArrayList<>();
     private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>();
-    private AMapLocalWeatherLive mAMapLocalWeatherLive;
+    private LocalWeatherLive mAMapLocalWeatherLive;
 
     private AppCache() {
     }
@@ -76,11 +76,11 @@ public class AppCache {
         return mDownloadList;
     }
 
-    public AMapLocalWeatherLive getAMapLocalWeatherLive() {
+    public LocalWeatherLive getAMapLocalWeatherLive() {
         return mAMapLocalWeatherLive;
     }
 
-    public void setAMapLocalWeatherLive(AMapLocalWeatherLive aMapLocalWeatherLive) {
+    public void setAMapLocalWeatherLive(LocalWeatherLive aMapLocalWeatherLive) {
         mAMapLocalWeatherLive = aMapLocalWeatherLive;
     }
 

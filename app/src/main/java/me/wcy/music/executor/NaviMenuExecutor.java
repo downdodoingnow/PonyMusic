@@ -13,6 +13,7 @@ import me.wcy.music.constants.Actions;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.service.QuitTimer;
 import me.wcy.music.storage.preference.Preferences;
+import me.wcy.music.utils.AlertDialogUtils;
 import me.wcy.music.utils.ToastUtils;
 
 /**
@@ -47,21 +48,14 @@ public class NaviMenuExecutor {
     }
 
     private void exit() {
-        new AlertDialog.Builder(activity)
-                .setTitle(R.string.menu_is_exit)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        activity.finish();
-                        PlayService.startCommand(activity, Actions.ACTION_STOP);
-                    }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        new AlertDialogUtils(activity, new AlertDialogUtils.IConfirmCallBack() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
+            public void operate(DialogInterface dialog) {
                 dialog.dismiss();
+                activity.finish();
+                PlayService.startCommand(activity, Actions.ACTION_STOP);
             }
-        }).show();
+        }).build(R.string.menu_is_exit);
     }
 
     private void startActivity(Class<?> cls) {
