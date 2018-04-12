@@ -122,14 +122,6 @@ public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearch
 
     @Override
     public void execute() {
-//        LocalWeatherLive aMapLocalWeatherLive = AppCache.get().getAMapLocalWeatherLive();
-//        if (aMapLocalWeatherLive != null) {
-//            updateView(aMapLocalWeatherLive);
-//            release();
-//        } else {
-//            LocationManagerProxy mLocationManagerProxy = LocationManagerProxy.getInstance(mContext);
-//            mLocationManagerProxy.requestWeatherUpdates(LocationManagerProxy.WEATHER_TYPE_LIVE, this);
-
         //获取位置信息
         AMapLocationClient locationClient = new AMapLocationClient(mContext);
         locationClient.setLocationListener(this);
@@ -143,7 +135,6 @@ public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearch
         locationClient.setLocationOption(locationOption);
         // 启动定位
         locationClient.startLocation();
-//        }
     }
 
     @Override
@@ -174,22 +165,6 @@ public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearch
     public void onWeatherForecastSearched(LocalWeatherForecastResult localWeatherForecastResult, int i) {
 
     }
-//    @Override
-//    public void onWeatherLiveSearched(AMapLocalWeatherLive aMapLocalWeatherLive) {
-//        if (aMapLocalWeatherLive != null && aMapLocalWeatherLive.getAMapException().getErrorCode() == 0) {
-//            AppCache.get().setAMapLocalWeatherLive(aMapLocalWeatherLive);
-//            updateView(aMapLocalWeatherLive);
-//        } else {
-//            llWeather.setVisibility(View.INVISIBLE);
-//            ll_refresh.setVisibility(View.VISIBLE);
-//            Log.e(TAG, "获取天气预报失败  " + aMapLocalWeatherLive.getAMapException().getErrorMessage());
-//        }
-//        release();
-//    }
-//
-//    @Override
-//    public void onWeatherForecaseSearched(AMapLocalWeatherForecast aMapLocalWeatherForecast) {
-//    }
 
     private void updateView(LocalWeatherLive aMapLocalWeatherLive) {
         llWeather.setVisibility(View.VISIBLE);

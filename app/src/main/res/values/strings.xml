@@ -81,4 +81,5 @@
     <string name="is_delete_all">是否清空历史</string>
     <string name="is_delete">是否删除</string>
     <string name="download_music">下载音乐</string>
+    <string name="play_list">播放列表</string>
 </resources>

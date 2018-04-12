@@ -14,6 +14,7 @@ import java.util.Random;
 
 import me.wcy.music.application.Notifier;
 import me.wcy.music.enums.PlayModeEnum;
+import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.model.Music;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
 import me.wcy.music.storage.db.DBManager;

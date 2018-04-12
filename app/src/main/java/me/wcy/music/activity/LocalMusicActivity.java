@@ -87,7 +87,7 @@ public class LocalMusicActivity extends BaseActivity implements AdapterView.OnIt
         mContext = this;
 
         if (null == mMusicList && AppCache.get().getLocalMusicList().isEmpty()) {
-            scanMusic(null);
+            scanMusic();
         } else {
             initListView();
         }
@@ -95,11 +95,8 @@ public class LocalMusicActivity extends BaseActivity implements AdapterView.OnIt
 
     /**
      * 当在首页获取音乐数据失败后再次进行获取
-     *
-     * @param object
      */
-    @Subscribe(tags = {@Tag(RxBusTags.SCAN_MUSIC)})
-    public void scanMusic(Object object) {
+    public void scanMusic() {
         lvLocalMusic.setVisibility(View.GONE);
         vSearching.setVisibility(View.VISIBLE);
         PermissionReq.with(this)
@@ -117,7 +114,6 @@ public class LocalMusicActivity extends BaseActivity implements AdapterView.OnIt
 
                             @Override
                             protected void onPostExecute(List<Music> musicList) {
-
                                 mMusicList = MusicUtils.getDownloadMusicList();
                                 AppCache.get().getLocalMusicList().clear();
                                 AppCache.get().getLocalMusicList().addAll(mMusicList);

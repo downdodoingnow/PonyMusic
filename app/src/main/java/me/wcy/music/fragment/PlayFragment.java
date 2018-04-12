@@ -26,6 +26,7 @@ import java.util.List;
 
 import me.wcy.lrcview.LrcView;
 import me.wcy.music.R;
+import me.wcy.music.activity.PlaylistActivity;
 import me.wcy.music.adapter.PlayPagerAdapter;
 import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
@@ -77,6 +78,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private ImageView ivNext;
     @Bind(R.id.iv_prev)
     private ImageView ivPrev;
+    @Bind(R.id.iv_list)
+    private ImageView ivList;
     private AlbumCoverView mAlbumCoverView;
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;
@@ -119,6 +122,7 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ivPlay.setOnClickListener(this);
         ivPrev.setOnClickListener(this);
         ivNext.setOnClickListener(this);
+        ivList.setOnClickListener(this);
         sbProgress.setOnSeekBarChangeListener(this);
         sbVolume.setOnSeekBarChangeListener(this);
         vpPlay.addOnPageChangeListener(this);
@@ -216,6 +220,12 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                 break;
             case R.id.iv_prev:
                 prev();
+                break;
+            case R.id.iv_list:
+                Intent intentPlayList = new Intent(getContext(), PlaylistActivity.class);
+                startActivity(intentPlayList);
+                break;
+            default:
                 break;
         }
     }

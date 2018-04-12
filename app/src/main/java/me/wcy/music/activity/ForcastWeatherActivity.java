@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -16,6 +17,7 @@ import com.amap.api.services.weather.LocalWeatherLive;
 import com.amap.api.services.weather.LocalWeatherLiveResult;
 import com.amap.api.services.weather.WeatherSearch;
 import com.amap.api.services.weather.WeatherSearchQuery;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -50,6 +52,9 @@ public class ForcastWeatherActivity extends BaseActivity implements WeatherSearc
     @Bind(R.id.forcast)
     ListView mForcastList;
 
+    @Bind(R.id.forcast_weather)
+    LinearLayout mForcastWeather;
+
     private ForcastWeatherAdapter mAdapter;
 
     @Override
@@ -71,14 +76,32 @@ public class ForcastWeatherActivity extends BaseActivity implements WeatherSearc
 
     private void initView() {
         LocalWeatherLive aMapLocalWeatherLive = AppCache.get().getAMapLocalWeatherLive();
+        //获取当日的天气数据
         if (null != aMapLocalWeatherLive) {
+            String weather = aMapLocalWeatherLive.getWeather();
             mTimeText.setText(aMapLocalWeatherLive.getReportTime());
-            mWreatherImg.setImageResource(WeatherExecutor.getWeatherIcon(aMapLocalWeatherLive.getWeather()));
-            mWeatherText.setText(aMapLocalWeatherLive.getWeather());
+            mWreatherImg.setImageResource(WeatherExecutor.getWeatherIcon(weather));
+            mWeatherText.setText(weather);
             mTemperatureText.setText(getString(R.string.weather_temp, aMapLocalWeatherLive.getTemperature()));
             mWindDirection.setText(aMapLocalWeatherLive.getWindDirection() + "风");
             mWindNum.setText(aMapLocalWeatherLive.getWindPower() + "级");
             mMoisture.setText(aMapLocalWeatherLive.getHumidity() + "%");
+
+            setWeatherBack(weather);
+        }
+    }
+
+    private void setWeatherBack(String weather) {
+        if (weather.contains("多云")) {
+            mForcastWeather.setBackgroundResource(R.drawable.ic_cloudy);
+        } else if (weather.contains("晴")) {
+            mForcastWeather.setBackgroundResource(R.drawable.ic_sunny);
+        } else if (weather.equals("雨")) {
+            mForcastWeather.setBackgroundResource(R.drawable.ic_rain);
+        } else if (weather.contains("雪")) {
+            mForcastWeather.setBackgroundResource(R.drawable.ic_snow);
+        } else {
+            mForcastWeather.setBackgroundResource(R.drawable.ic_overcast);
         }
     }
 

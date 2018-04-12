@@ -14,7 +14,6 @@ import java.io.File;
 public class ID3Tags {
     private static final String FRONT_COVER_DESC = "front_cover";
     private static final String MIME_TYPE_JPEG = "image/jpeg";
-
     // 标题
     private String title;
     // 艺术家

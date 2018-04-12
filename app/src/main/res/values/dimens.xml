@@ -9,4 +9,5 @@
     <dimen name="margin_left">10dp</dimen>
     <dimen name="my_img_width">20dp</dimen>
     <dimen name="my_img_height">22dp</dimen>
+    <dimen name="my_item_height">50dp</dimen>
 </resources>

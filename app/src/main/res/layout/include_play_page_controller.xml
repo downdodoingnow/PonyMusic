@@ -72,5 +72,14 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/iv_play"
             android:src="@drawable/play_btn_next_selector" />
+
+        <ImageView
+            android:id="@+id/iv_list"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/ic_list_play" />
     </RelativeLayout>
 </LinearLayout>

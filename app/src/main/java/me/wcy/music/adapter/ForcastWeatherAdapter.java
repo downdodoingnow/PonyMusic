@@ -56,7 +56,7 @@ public class ForcastWeatherAdapter extends BaseAdapter {
 
         holder.mTime.setText(mData.get(position).getDate());
         holder.mWeather.setText(mData.get(position).getDayWeather());
-        holder.mTemperature.setText(mContext.getString(R.string.weather_temp, mData.get(position).getDayTemp()));
+        holder.mTemperature.setText(mContext.getString(R.string.weather_temp, mData.get(position).getDayTemp()) + "~" + mContext.getString(R.string.weather_temp, mData.get(position).getNightTemp()));
 
         return convertView;
     }
