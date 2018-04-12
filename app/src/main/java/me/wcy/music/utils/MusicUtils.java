@@ -22,13 +22,14 @@ import me.wcy.music.storage.preference.Preferences;
  */
 public class MusicUtils {
     private static final String SELECTION = MediaStore.Audio.AudioColumns.SIZE + " >= ? AND " + MediaStore.Audio.AudioColumns.DURATION + " >= ?";
+    private static ArrayList<Music> musicList;
 
     /**
      * 扫描歌曲
      */
     @NonNull
-    public static List<Music> scanMusic(Context context) {
-        List<Music> musicList = new ArrayList<>();
+    public static ArrayList<Music> scanMusic(Context context) {
+        musicList = new ArrayList<>();
 
         long filterSize = ParseUtils.parseLong(Preferences.getFilterSize()) * 1024;
         long filterTime = ParseUtils.parseLong(Preferences.getFilterTime()) * 1000;
@@ -75,6 +76,10 @@ public class MusicUtils {
             String fileName = cursor.getString((cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DISPLAY_NAME)));
             long fileSize = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
 
+            if (!checkIsMusic(duration, fileSize)) {
+                continue;
+            }
+
             Music music = new Music();
             music.setSongId(id);
             music.setType(Music.Type.LOCAL);
@@ -95,6 +100,43 @@ public class MusicUtils {
         cursor.close();
 
         return musicList;
+    }
+
+    /**
+     * 用于判断获取的音频文件是否满足音乐文件
+     *
+     * @param time 音频播放时间
+     * @param size 文件大小
+     * @return
+     */
+    public static boolean checkIsMusic(long time, long size) {
+        if (time < 0 || size < 0) {
+            return false;
+        }
+        time = time / 1000;
+        int minites = (int) (time / 60);
+        int seconds = (int) (time % 60);
+
+        if (minites <= 0 && seconds <= 30) {
+            return false;
+        }
+        if (size <= 1024 * 1024) {
+            return false;
+        }
+        return true;
+    }
+
+    public static ArrayList<Music> getDownloadMusicList() {
+        ArrayList<Music> downloadMusic = new ArrayList<>();
+        String downloadMusicDir = FileUtils.getRelativeMusicDir();
+
+        for (int i = 0; i < musicList.size(); i++) {
+            Music music = musicList.get(i);
+            if (music.getPath().contains(downloadMusicDir)) {
+                downloadMusic.add(music);
+            }
+        }
+        return downloadMusic;
     }
 
     public static Uri getMediaStoreAlbumCoverUri(long albumId) {

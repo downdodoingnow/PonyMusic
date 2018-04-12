@@ -96,7 +96,11 @@
         <activity
             android:name=".activity.ForcastWeatherActivity"
             android:label="@string/forcast_weather"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.LocalMusicActivity"
+            android:label="@string/local_music"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

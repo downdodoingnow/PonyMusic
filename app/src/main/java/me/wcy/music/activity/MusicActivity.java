@@ -277,14 +277,14 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         mSheetListFragment.onSaveInstanceState(outState);
     }
 
-    @Override
-    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
-        mViewPager.post(() -> {
-            mViewPager.setCurrentItem(savedInstanceState.getInt(Keys.VIEW_PAGER_INDEX), false);
-            mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
-            mSheetListFragment.onRestoreInstanceState(savedInstanceState);
-        });
-    }
+//    @Override
+//    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+//        mViewPager.post(() -> {
+//            mViewPager.setCurrentItem(savedInstanceState.getInt(Keys.VIEW_PAGER_INDEX), false);
+//            mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
+//            mSheetListFragment.onRestoreInstanceState(savedInstanceState);
+//        });
+//    }
 
     @Override
     protected void onDestroy() {

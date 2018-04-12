@@ -1,24 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/lv_local_music"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:paddingBottom="@dimen/play_bar_height" />
+    <!--<ListView
+    android:id="@+id/lv_local_music"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:divider="@null"
+    android:paddingBottom="@dimen/play_bar_height" />
 
     <TextView
-        android:id="@+id/v_searching"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/screen_tips_top"
-        android:text="正在扫描…"
-        android:textColor="@color/grey"
-        android:textSize="14sp"
-        android:visibility="gone" />
-</FrameLayout>
+    android:id="@+id/v_searching"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="@dimen/screen_tips_top"
+    android:text="正在扫描…"
+    android:textColor="@color/grey"
+    android:textSize="14sp"
+    android:visibility="gone" />-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/local_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_left">
+
+            <ImageView
+                android:layout_width="@dimen/my_img_width"
+                android:layout_height="@dimen/my_img_height"
+                android:src="@drawable/ic_music" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:text="@string/local_music"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/local_music_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:text="(0)"
+                android:textColor="@color/grey" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="@dimen/my_img_width"
+            android:layout_height="19dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_enter" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:layout_marginRight="@dimen/margin_left"
+        android:background="@color/grey_50p" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/download_music"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_left">
+
+            <ImageView
+                android:layout_width="@dimen/my_img_width"
+                android:layout_height="@dimen/my_img_height"
+                android:src="@drawable/ic_download" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:text="@string/download_music"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/download_music_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_left"
+                android:text="(0)"
+                android:textColor="@color/grey" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="@dimen/my_img_width"
+            android:layout_height="19dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_enter" />
+    </RelativeLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="@dimen/margin_left"
+        android:layout_marginRight="@dimen/margin_left"
+        android:background="@color/grey_50p" />
+</LinearLayout>

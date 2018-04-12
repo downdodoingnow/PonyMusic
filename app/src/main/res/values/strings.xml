@@ -9,6 +9,8 @@
     <string name="loading">努力加载中…</string>
     <string name="load_fail">加载失败，请检查网络后重试</string>
     <string name="local_music">本地音乐</string>
+    <string name="my">我的</string>
+    <string name="download_music_list">下载音乐</string>
     <string name="online_music">在线音乐</string>
     <string name="unknown">未知</string>
     <string name="delete_music">删除%s？</string>
@@ -78,4 +80,5 @@
     <string name="forcast_weather">天气预报</string>
     <string name="is_delete_all">是否清空历史</string>
     <string name="is_delete">是否删除</string>
+    <string name="download_music">下载音乐</string>
 </resources>
