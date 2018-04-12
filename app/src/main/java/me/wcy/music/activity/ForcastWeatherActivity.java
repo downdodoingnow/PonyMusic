@@ -25,6 +25,7 @@ import me.wcy.music.R;
 import me.wcy.music.adapter.ForcastWeatherAdapter;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.executor.WeatherExecutor;
+import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.binding.Bind;
 
 public class ForcastWeatherActivity extends BaseActivity implements WeatherSearch.OnWeatherSearchListener {
@@ -86,8 +87,11 @@ public class ForcastWeatherActivity extends BaseActivity implements WeatherSearc
             mWindDirection.setText(aMapLocalWeatherLive.getWindDirection() + "风");
             mWindNum.setText(aMapLocalWeatherLive.getWindPower() + "级");
             mMoisture.setText(aMapLocalWeatherLive.getHumidity() + "%");
-
-            setWeatherBack(weather);
+            if (Preferences.isNightMode()) {
+                mForcastWeather.setBackgroundColor(getResources().getColor(R.color.grey_900));
+            } else {
+                setWeatherBack(weather);
+            }
         }
     }
 
