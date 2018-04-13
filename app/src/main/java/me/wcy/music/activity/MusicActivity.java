@@ -269,7 +269,9 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case 0:
-                recreate();
+                if (0 == resultCode) {
+                    recreate();
+                }
                 break;
         }
     }

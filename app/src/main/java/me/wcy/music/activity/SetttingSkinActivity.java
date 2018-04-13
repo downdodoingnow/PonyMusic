@@ -1,24 +1,13 @@
 package me.wcy.music.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import me.wcy.music.R;
 import me.wcy.music.adapter.IInterface.IOnItemClick;
 import me.wcy.music.adapter.SettingSkinAdapter;
 import me.wcy.music.storage.preference.Preferences;
-import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 
 public class SetttingSkinActivity extends BaseActivity {
@@ -46,8 +35,13 @@ public class SetttingSkinActivity extends BaseActivity {
         mAdapter.setOnItemClick(new IOnItemClick() {
             @Override
             public void onItemClick(int position) {
-                Preferences.setThemeId(position);
-                recreate();
+                if (position != Preferences.getThemeId()) {
+                    Preferences.setThemeId(position);
+                    recreate();
+                    SetttingSkinActivity.this.setResult(0);
+                } else {
+                    SetttingSkinActivity.this.setResult(1);
+                }
             }
         });
     }

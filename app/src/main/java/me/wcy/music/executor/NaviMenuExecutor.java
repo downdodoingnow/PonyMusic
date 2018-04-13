@@ -44,6 +44,7 @@ public class NaviMenuExecutor {
                 return true;
             case R.id.action_exit:
                 exit();
+                return true;
             case R.id.action_info:
                 startActivity(SettingInfoActivity.class);
                 return true;
