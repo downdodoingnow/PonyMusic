@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -90,7 +92,12 @@ public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearch
     private TextView tvCity;
     @Bind(R.id.tv_weather_wind)
     private TextView tvWind;
+    @Bind(R.id.refresh_weather_tink)
+    private TextView mRefreshWeatherTink;
+    @Bind(R.id.refresh_weather_img)
+    ImageView mRefreshWeatherImg;
 
+    private Animation rotate;
     private String mLocation;
 
     public WeatherExecutor(Context context, View navigationHeader) {
@@ -101,6 +108,8 @@ public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearch
     }
 
     public void init() {
+        rotate = AnimationUtils.loadAnimation(mContext, R.anim.rotation_animation);
+
         llWeather.setOnClickListener(this);
         ll_refresh.setOnClickListener(this);
     }
@@ -114,6 +123,9 @@ public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearch
                 mActivity.startActivity(intent);
                 break;
             case R.id.ll_refresh:
+                mRefreshWeatherTink.setText(R.string.get_weather_info_again);
+                mRefreshWeatherImg.startAnimation(rotate);
+                execute();
                 break;
             default:
                 break;
@@ -149,6 +161,7 @@ public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearch
 
     @Override
     public void onWeatherLiveSearched(LocalWeatherLiveResult localWeatherLiveResult, int i) {
+        mRefreshWeatherImg.clearAnimation();
         if (null != localWeatherLiveResult) {
             LocalWeatherLive weatherLive = localWeatherLiveResult.getLiveResult();
             AppCache.get().setAMapLocalWeatherLive(weatherLive);
@@ -156,6 +169,8 @@ public class WeatherExecutor implements IExecutor, WeatherSearch.OnWeatherSearch
         } else {
             llWeather.setVisibility(View.INVISIBLE);
             ll_refresh.setVisibility(View.VISIBLE);
+
+            mRefreshWeatherTink.setText(R.string.get_weather_info_fail);
             Log.e(TAG, "获取天气预报失败");
         }
         release();

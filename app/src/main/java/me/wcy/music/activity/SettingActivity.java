@@ -18,7 +18,6 @@ import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
 public class SettingActivity extends BaseActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +37,8 @@ public class SettingActivity extends BaseActivity {
         private Preference mSoundEffect;
         private Preference mFilterSize;
         private Preference mFilterTime;
+        private Preference mAbout;
+        private Preference mChangeAccount;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,13 @@ public class SettingActivity extends BaseActivity {
             mSoundEffect = findPreference(getString(R.string.setting_key_sound_effect));
             mFilterSize = findPreference(getString(R.string.setting_key_filter_size));
             mFilterTime = findPreference(getString(R.string.setting_key_filter_time));
+            mAbout = findPreference(getString(R.string.setting_key_about));
+            mChangeAccount = findPreference(getString(R.string.setting_key_change_account));
+
             mSoundEffect.setOnPreferenceClickListener(this);
+            mAbout.setOnPreferenceClickListener(this);
+            mChangeAccount.setOnPreferenceClickListener(this);
+
             mFilterSize.setOnPreferenceChangeListener(this);
             mFilterTime.setOnPreferenceChangeListener(this);
 
@@ -59,6 +66,13 @@ public class SettingActivity extends BaseActivity {
         public boolean onPreferenceClick(Preference preference) {
             if (preference == mSoundEffect) {
                 startEqualizer();
+                return true;
+            } else if (preference == mAbout) {
+                Intent intent = new Intent(getContext(), AboutActivity.class);
+                getContext().startActivity(intent);
+                return true;
+            } else if (preference == mChangeAccount) {
+                ToastUtils.show("切换帐号");
                 return true;
             }
             return false;

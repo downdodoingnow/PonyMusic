@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_info"
+            android:icon="@drawable/ic_info"
+            android:title="@string/menu_info" />
+        <item
+            android:id="@+id/action_friends"
+            android:icon="@drawable/ic_friends"
+            android:title="@string/menu_friends" />
+        <item
+            android:id="@+id/action_scan"
+            android:icon="@drawable/ic_scan"
+            android:title="@string/menu_scan" />
+        <item
+            android:id="@+id/action_skin"
+            android:icon="@drawable/ic_skin"
+            android:title="@string/menu_skin" />
+    </group>
+
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/action_setting"
@@ -17,9 +37,5 @@
             android:id="@+id/action_exit"
             android:icon="@drawable/ic_menu_exit"
             android:title="@string/menu_exit" />
-        <item
-            android:id="@+id/action_about"
-            android:icon="@drawable/ic_menu_about"
-            android:title="@string/menu_about" />
     </group>
 </menu>

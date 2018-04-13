@@ -15,5 +15,6 @@
         android:layout_gravity="start"
         app:itemIconTint="?attr/colorPrimary"
         app:menu="@menu/navigation_menu" />
+
 </android.support.v4.widget.DrawerLayout>
 

@@ -41,4 +41,13 @@
             android:summary="不过滤"
             android:title="按时长过滤" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="@string/about">
+
+        <Preference
+            android:key="@string/setting_key_about"
+            android:title="@string/about_system" />
+    </PreferenceCategory>
+    <Preference
+        android:key="@string/setting_key_change_account"
+        android:layout="@layout/chang_account" />
 </PreferenceScreen>

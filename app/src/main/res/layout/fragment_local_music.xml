@@ -26,7 +26,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_left"
                 android:text="@string/local_music"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor_bnt"
                 android:textSize="16sp" />
 
             <TextView
@@ -78,7 +78,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_left"
                 android:text="@string/play_list"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor_bnt"
                 android:textSize="16sp" />
 
             <TextView
@@ -129,7 +129,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_left"
                 android:text="@string/download_music"
-                android:textColor="@color/black"
+                android:textColor="?attr/textColor_bnt"
                 android:textSize="16sp" />
 
             <TextView

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.wcy.music.R;
-import me.wcy.music.adapter.OnMoreClickListener;
+import me.wcy.music.adapter.IInterface.OnMoreClickListener;
 import me.wcy.music.adapter.OnlineMusicAdapter;
 import me.wcy.music.constants.Extras;
 import me.wcy.music.enums.LoadStateEnum;

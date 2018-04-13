@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -77,6 +78,8 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         AudioPlayer.get().addOnPlayEventListener(controlPanel);
         QuitTimer.get().setOnTimerListener(this);
         parseIntent();
+
+        disableNavigationViewScrollbars();
     }
 
     @Override
@@ -106,6 +109,16 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         flPlayBar.setOnClickListener(this);
         mViewPager.addOnPageChangeListener(this);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    //去掉navigationView中的滚动效果
+    private void disableNavigationViewScrollbars() {
+        if (null != navigationView) {
+            NavigationMenuView navigationMenuView = (NavigationMenuView) navigationView.getChildAt(0);
+            if (null != navigationMenuView) {
+                navigationMenuView.setVerticalScrollBarEnabled(false);
+            }
+        }
     }
 
     private void updateWeather() {
@@ -251,6 +264,15 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 //            mSheetListFragment.onRestoreInstanceState(savedInstanceState);
 //        });
 //    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 0:
+                recreate();
+                break;
+        }
+    }
 
     @Override
     protected void onDestroy() {

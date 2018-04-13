@@ -42,6 +42,10 @@
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
     <string name="search_tips">歌曲名、歌手名</string>
     <string name="search_empty">未找到相关结果</string>
+    <string name="menu_info">个人设置</string>
+    <string name="menu_friends">好友</string>
+    <string name="menu_scan">扫一扫</string>
+    <string name="menu_skin">个性换肤</string>
     <string name="menu_setting">功能设置</string>
     <string name="menu_share">推荐给朋友</string>
     <string name="menu_about">关于索拉音乐</string>
@@ -53,6 +57,8 @@
     <string name="mobile_network_play">使用移动网络播放</string>
     <string name="mobile_network_download">使用移动网络下载</string>
     <string name="play">播放</string>
+    <string name="about">关于</string>
+    <string name="about_system">关于索拉音乐</string>
     <string name="sound_effect">音效调节</string>
     <string name="tips">温馨提示</string>
     <string name="play_tips">当前处于移动网络，确定打开移动网络播放开关吗？</string>
@@ -82,4 +88,8 @@
     <string name="is_delete">是否删除</string>
     <string name="download_music">下载音乐</string>
     <string name="play_list">播放列表</string>
+    <string name="change_account">切换帐号</string>
+    <string name="login">登录</string>
+    <string name="get_weather_info_fail">获取天气数据失败</string>
+    <string name="get_weather_info_again">正在重新获取</string>
 </resources>

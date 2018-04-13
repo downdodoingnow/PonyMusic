@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import me.wcy.music.R;
+import me.wcy.music.application.MusicApplication;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.PermissionReq;
@@ -44,6 +45,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if (Preferences.isNightMode()) {
             setTheme(getDarkTheme());
+        } else {
+            setTheme(MusicApplication.mStyleList[Preferences.getThemeId()]);
         }
 
         super.onCreate(savedInstanceState);

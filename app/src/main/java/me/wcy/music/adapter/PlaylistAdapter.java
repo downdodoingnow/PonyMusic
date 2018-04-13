@@ -11,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import me.wcy.music.R;
+import me.wcy.music.adapter.IInterface.OnMoreClickListener;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.utils.CoverLoader;

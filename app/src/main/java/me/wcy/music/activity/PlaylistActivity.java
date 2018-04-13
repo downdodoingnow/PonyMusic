@@ -6,10 +6,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toolbar;
 
 import me.wcy.music.R;
-import me.wcy.music.adapter.OnMoreClickListener;
+import me.wcy.music.adapter.IInterface.OnMoreClickListener;
 import me.wcy.music.adapter.PlaylistAdapter;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.AudioPlayer;

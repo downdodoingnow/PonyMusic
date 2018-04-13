@@ -18,4 +18,11 @@
     <color name="grey_300_96p">#F5E0E0E0</color>
     <color name="grey_900">#212121</color>
     <color name="grey_900_96p">#F5212121</color>
+    <color name="purple">#BA55D3</color>
+    <color name="pink">#FFC0CB</color>
+    <color name="royal_blue">#4169E1</color>
+    <color name="dark_slate_blue">#483D8B</color>
+    <color name="deep_sky_blue">#00BFFF</color>
+    <color name="light_green">#90EE90</color>
+    <color name="orange">#FFA500</color>
 </resources>

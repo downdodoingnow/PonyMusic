@@ -15,6 +15,7 @@ public class Preferences {
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";
     private static final String NIGHT_MODE = "night_mode";
+    private static final String THEMEID = "theme_id";
 
     private static Context sContext;
 
@@ -44,6 +45,14 @@ public class Preferences {
 
     public static void saveSplashUrl(String url) {
         saveString(SPLASH_URL, url);
+    }
+
+    public static int getThemeId() {
+        return getInt(THEMEID, 1);
+    }
+
+    public static void setThemeId(int id) {
+        saveInt(THEMEID, id);
     }
 
     public static boolean enableMobileNetworkPlay() {

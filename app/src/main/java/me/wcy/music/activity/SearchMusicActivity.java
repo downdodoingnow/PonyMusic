@@ -24,7 +24,8 @@ import java.util.List;
 
 import me.wcy.music.R;
 import me.wcy.music.adapter.HistorySearchAdapter;
-import me.wcy.music.adapter.OnMoreClickListener;
+import me.wcy.music.adapter.IInterface.IOnItemClick;
+import me.wcy.music.adapter.IInterface.OnMoreClickListener;
 import me.wcy.music.adapter.SearchMusicAdapter;
 import me.wcy.music.enums.LoadStateEnum;
 import me.wcy.music.executor.DownloadSearchedMusic;
@@ -95,7 +96,7 @@ public class SearchMusicActivity extends BaseActivity implements SearchView.OnQu
             //增加条目或者删除条目的动画效果
             historyList.setItemAnimator(new DefaultItemAnimator());
 
-            mHistorySearchAdapter.setOnItemClick(new HistorySearchAdapter.onItemClick() {
+            mHistorySearchAdapter.setOnItemClick(new IOnItemClick() {
                 @Override
                 public void onItemClick(int position) {
                     searchMusic(mData.get(position).getName());

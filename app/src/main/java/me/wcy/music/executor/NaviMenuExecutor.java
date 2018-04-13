@@ -7,8 +7,13 @@ import android.view.MenuItem;
 
 import me.wcy.music.R;
 import me.wcy.music.activity.AboutActivity;
+import me.wcy.music.activity.FriendsActivity;
 import me.wcy.music.activity.MusicActivity;
+import me.wcy.music.activity.ScanActivity;
 import me.wcy.music.activity.SettingActivity;
+import me.wcy.music.activity.SettingInfoActivity;
+import me.wcy.music.activity.SetttingSkinActivity;
+import me.wcy.music.adapter.SettingSkinAdapter;
 import me.wcy.music.constants.Actions;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.service.QuitTimer;
@@ -39,9 +44,17 @@ public class NaviMenuExecutor {
                 return true;
             case R.id.action_exit:
                 exit();
+            case R.id.action_info:
+                startActivity(SettingInfoActivity.class);
                 return true;
-            case R.id.action_about:
-                startActivity(AboutActivity.class);
+            case R.id.action_friends:
+                startActivity(FriendsActivity.class);
+                return true;
+            case R.id.action_scan:
+                startActivity(ScanActivity.class);
+                return true;
+            case R.id.action_skin:
+                activity.startActivityForResult(new Intent(activity, SetttingSkinActivity.class), 0);
                 return true;
         }
         return false;

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import me.wcy.music.R;
+import me.wcy.music.adapter.IInterface.IOnItemClick;
 import me.wcy.music.model.HistorySearch;
 import me.wcy.music.storage.db.HistorySearchDBManager;
 import me.wcy.music.utils.AlertDialogUtils;
@@ -24,7 +25,7 @@ public class HistorySearchAdapter extends RecyclerView.Adapter<HistorySearchAdap
     private List<HistorySearch> mData;
     private Context mContext;
     private LinearLayout searchHistoryll;
-    private onItemClick mOnItemClick;
+    private IOnItemClick mOnItemClick;
 
     public HistorySearchAdapter(Context mContext, List<HistorySearch> mData, LinearLayout searchHistoryll) {
         this.mContext = mContext;
@@ -32,7 +33,7 @@ public class HistorySearchAdapter extends RecyclerView.Adapter<HistorySearchAdap
         this.searchHistoryll = searchHistoryll;
     }
 
-    public void setOnItemClick(onItemClick mOnItemClick) {
+    public void setOnItemClick(IOnItemClick mOnItemClick) {
         this.mOnItemClick = mOnItemClick;
     }
 
@@ -90,9 +91,4 @@ public class HistorySearchAdapter extends RecyclerView.Adapter<HistorySearchAdap
             mItemView = itemView.findViewById(R.id.item_view);
         }
     }
-
-    public interface onItemClick {
-        void onItemClick(int position);
-    }
-
 }
