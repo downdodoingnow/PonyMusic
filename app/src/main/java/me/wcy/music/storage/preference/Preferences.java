@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import me.wcy.music.R;
+import me.wcy.music.model.User;
 
 /**
  * SharedPreferences工具类
@@ -15,6 +16,7 @@ public class Preferences {
     private static final String PLAY_MODE = "play_mode";
     private static final String SPLASH_URL = "splash_url";
     private static final String NIGHT_MODE = "night_mode";
+    private static final String LOGIN_MODE = "login_mode";
     private static final String THEMEID = "theme_id";
 
     private static Context sContext;
@@ -69,6 +71,14 @@ public class Preferences {
 
     public static boolean isNightMode() {
         return getBoolean(NIGHT_MODE, false);
+    }
+
+    public static boolean isLogin() {
+        return getBoolean(LOGIN_MODE, false);
+    }
+
+    public static void saveLoginMode(boolean on) {
+        saveBoolean(LOGIN_MODE, on);
     }
 
     public static void saveNightMode(boolean on) {
@@ -126,4 +136,5 @@ public class Preferences {
     private static SharedPreferences getPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(sContext);
     }
+
 }

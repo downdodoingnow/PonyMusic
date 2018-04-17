@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,11 +27,13 @@ import java.util.List;
 
 import me.wcy.lrcview.LrcView;
 import me.wcy.music.R;
+import me.wcy.music.activity.CommonActivity;
 import me.wcy.music.activity.PlaylistActivity;
 import me.wcy.music.adapter.PlayPagerAdapter;
 import me.wcy.music.constants.Actions;
 import me.wcy.music.enums.PlayModeEnum;
 import me.wcy.music.executor.SearchLrc;
+import me.wcy.music.executor.ShareOnlineMusic;
 import me.wcy.music.model.Music;
 import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.service.OnPlayerEventListener;
@@ -80,6 +83,11 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private ImageView ivPrev;
     @Bind(R.id.iv_list)
     private ImageView ivList;
+    @Bind(R.id.share)
+    private ImageView ivShare;
+
+    private ImageView ivCommon;
+
     private AlbumCoverView mAlbumCoverView;
     private LrcView mLrcViewSingle;
     private LrcView mLrcViewFull;
@@ -123,6 +131,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ivPrev.setOnClickListener(this);
         ivNext.setOnClickListener(this);
         ivList.setOnClickListener(this);
+        ivShare.setOnClickListener(this);
+
         sbProgress.setOnSeekBarChangeListener(this);
         sbVolume.setOnSeekBarChangeListener(this);
         vpPlay.addOnPageChangeListener(this);
@@ -144,9 +154,13 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
         mAlbumCoverView = coverView.findViewById(R.id.album_cover_view);
         mLrcViewSingle = coverView.findViewById(R.id.lrc_view_single);
         mLrcViewFull = lrcView.findViewById(R.id.lrc_view_full);
+        ivCommon = coverView.findViewById(R.id.common);
         sbVolume = lrcView.findViewById(R.id.sb_volume);
         mAlbumCoverView.initNeedle(AudioPlayer.get().isPlaying());
+
         mLrcViewFull.setOnPlayClickListener(this);
+        ivCommon.setOnClickListener(this);
+
         initVolume();
 
         mViewPagerContent = new ArrayList<>(2);
@@ -222,11 +236,37 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                 prev();
                 break;
             case R.id.iv_list:
-                Intent intentPlayList = new Intent(getContext(), PlaylistActivity.class);
-                startActivity(intentPlayList);
+                startActivity(PlaylistActivity.class);
+                break;
+            case R.id.share:
+                shareMusic();
+                break;
+            case R.id.common:
+                startActivity(CommonActivity.class);
                 break;
             default:
                 break;
+        }
+    }
+
+    public void startActivity(Class<?> cls) {
+        Intent intent = new Intent(getContext(), cls);
+        startActivity(intent);
+    }
+
+    /**
+     * 分享音乐
+     */
+    private void shareMusic() {
+        Music music = AudioPlayer.get().getPlayMusic();
+        if (null != music) {
+            File file = new File(music.getPath());
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("audio/*");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+            startActivity(Intent.createChooser(intent, getString(R.string.share)));
+        } else {
+            ToastUtils.show("暂无音乐，请添加音乐");
         }
     }
 

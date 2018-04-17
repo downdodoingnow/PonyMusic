@@ -11,4 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="?attr/change_account">
+
+        <TextView
+            android:id="@+id/login_tink"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:background="?attr/playBarBackground"
+            android:gravity="center"
+            android:text="@string/login"
+            android:textColor="?attr/textColor_bnt"
+            android:textSize="16sp" />
+    </LinearLayout>
+
 </LinearLayout>

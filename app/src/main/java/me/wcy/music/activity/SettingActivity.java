@@ -13,8 +13,8 @@ import com.hwangjr.rxbus.RxBus;
 import me.wcy.music.R;
 import me.wcy.music.constants.RxBusTags;
 import me.wcy.music.service.AudioPlayer;
-import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.storage.preference.Preferences;
+import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.ToastUtils;
 
 public class SettingActivity extends BaseActivity {
@@ -51,6 +51,8 @@ public class SettingActivity extends BaseActivity {
             mAbout = findPreference(getString(R.string.setting_key_about));
             mChangeAccount = findPreference(getString(R.string.setting_key_change_account));
 
+            initLoginBnt();
+
             mSoundEffect.setOnPreferenceClickListener(this);
             mAbout.setOnPreferenceClickListener(this);
             mChangeAccount.setOnPreferenceClickListener(this);
@@ -62,20 +64,48 @@ public class SettingActivity extends BaseActivity {
             mFilterTime.setSummary(getSummary(Preferences.getFilterTime(), R.array.filter_time_entries, R.array.filter_time_entry_values));
         }
 
+        //初始化登录按钮
+        private void initLoginBnt() {
+            if (Preferences.isLogin()) {
+                mChangeAccount.setLayoutResource(R.layout.chang_account);
+            } else {
+                mChangeAccount.setLayoutResource(R.layout.login_bnt);
+            }
+        }
+
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (preference == mSoundEffect) {
                 startEqualizer();
                 return true;
             } else if (preference == mAbout) {
-                Intent intent = new Intent(getContext(), AboutActivity.class);
-                getContext().startActivity(intent);
+                startActivity(AboutActivity.class);
+
                 return true;
             } else if (preference == mChangeAccount) {
-                ToastUtils.show("切换帐号");
+                //跳转到登录页面
+                if (!Preferences.isLogin()) {
+                    Intent intent = new Intent(getContext(), LoginActivity.class);
+                    startActivityForResult(intent, 0);
+                } else {//退出当前帐号
+                    Preferences.saveLoginMode(false);
+                    initLoginBnt();
+                }
                 return true;
             }
             return false;
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == 0) {
+                getActivity().recreate();
+            }
+        }
+
+        public void startActivity(Class<?> cls) {
+
         }
 
         private void startEqualizer() {

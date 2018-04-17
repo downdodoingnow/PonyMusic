@@ -42,7 +42,7 @@
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
     <string name="search_tips">歌曲名、歌手名</string>
     <string name="search_empty">未找到相关结果</string>
-    <string name="menu_info">个人设置</string>
+    <string name="menu_info">我的资料</string>
     <string name="menu_friends">好友</string>
     <string name="menu_scan">扫一扫</string>
     <string name="menu_skin">个性换肤</string>
@@ -90,6 +90,17 @@
     <string name="play_list">播放列表</string>
     <string name="change_account">切换帐号</string>
     <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="exit_login">退出登录</string>
     <string name="get_weather_info_fail">获取天气数据失败</string>
     <string name="get_weather_info_again">正在重新获取</string>
+    <string name="common">评论</string>
+    <string name="login_tel_hint">请输入手机号码</string>
+    <string name="login_pass_hint">请输入大于6位密码</string>
+    <string name="register_code_hint">请输入验证码</string>
+    <string name="register_get_code">获取验证码</string>
+    <string name="register_get_code_again">重新获取验证码</string>
+    <string name="register_pass_hint_again">请再次输入密码</string>
+    <string name="login_forget_pass">忘记密码?</string>
+    <string name="register_next">下一步</string>
 </resources>

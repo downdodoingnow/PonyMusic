@@ -5,4 +5,6 @@ public interface Keys {
     String LOCAL_MUSIC_OFFSET = "local_music_offset";
     String PLAYLIST_POSITION = "playlist_position";
     String PLAYLIST_OFFSET = "playlist_offset";
+
+    String ADRRESS = "http://172.17.115.0:8080/SSM";
 }

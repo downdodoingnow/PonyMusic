@@ -65,6 +65,12 @@ greendao {
     daoPackage "${android.defaultConfig.applicationId}.storage.db.greendao"
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"

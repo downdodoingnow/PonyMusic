@@ -22,6 +22,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+
+import com.mob.MobSDK;
 
 import me.wcy.music.R;
 import me.wcy.music.application.MusicApplication;
@@ -41,6 +44,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     private ServiceConnection serviceConnection;
     private ProgressDialog progressDialog;
 
+    private InputMethodManager imm;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         if (Preferences.isNightMode()) {
@@ -51,10 +56,23 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
         setSystemBarTransparent();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         handler = new Handler(Looper.getMainLooper());
         bindService();
+        //配置SSMSDK参数
+        MobSDK.init(this, "254520f1bbaf9", "b2642862e1bd5a0a8e67d99f25677274");
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    public void hideSoftInput(View view) {
+        if (null != imm) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+        }
     }
 
     @StyleRes

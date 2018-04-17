@@ -5,4 +5,5 @@
     android:orientation="vertical">
 
     <include layout="@layout/include_app_bar" />
+
 </LinearLayout>

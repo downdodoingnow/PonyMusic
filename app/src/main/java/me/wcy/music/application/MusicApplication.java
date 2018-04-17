@@ -18,7 +18,6 @@ public class MusicApplication extends Application {
             R.style.AppBaseThemePink, R.style.AppBaseThemeRoyalBlue, R.style.AppBaseThemeDeepSkyBlue, R.style.AppBaseThemeDeepLightGreen,
             R.style.AppBaseThemeDeepLightOrange, R.style.AppBaseThemeDarkSlateBlue
     };
-
     @Override
     public void onCreate() {
         super.onCreate();

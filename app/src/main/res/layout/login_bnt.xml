@@ -11,7 +11,7 @@
         android:layout_gravity="center_vertical"
         android:background="?attr/playBarBackground"
         android:gravity="center"
-        android:text="@string/exit_login"
+        android:text="@string/login"
         android:textColor="?attr/textColor_bnt"
         android:textSize="16sp" />
 </LinearLayout>
