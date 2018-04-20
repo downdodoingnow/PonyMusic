@@ -88,7 +88,7 @@
     <string name="is_delete">是否删除</string>
     <string name="download_music">下载音乐</string>
     <string name="play_list">播放列表</string>
-    <string name="change_account">切换帐号</string>
+    <string name="is_exit">是否退出登录</string>
     <string name="login">登录</string>
     <string name="register">注册</string>
     <string name="exit_login">退出登录</string>
@@ -103,4 +103,10 @@
     <string name="register_pass_hint_again">请再次输入密码</string>
     <string name="login_forget_pass">忘记密码?</string>
     <string name="register_next">下一步</string>
+    <string name="change_info_tink">请输入修改信息</string>
+    <string name="not_login">你还未登录，是否登录？</string>
+    <string name="my_two_code">我的二维码</string>
+    <string name="two_code_tink">扫描上面二维码即可进行好友关注</string>
+    <string name="friend_tink">数据加载失败...</string>
+    <string name="is_cancle_follow">是否取消关注</string>
 </resources>

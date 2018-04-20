@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.yzq.zxinglibrary.common.Constant;
+
+import me.wcy.music.IView.IUserView;
 import me.wcy.music.R;
 import me.wcy.music.adapter.FragmentAdapter;
 import me.wcy.music.constants.Extras;
@@ -28,6 +33,9 @@ import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
 import me.wcy.music.fragment.SheetListFragment;
+import me.wcy.music.model.Params;
+import me.wcy.music.model.User;
+import me.wcy.music.presenter.UserP;
 import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.service.QuitTimer;
 import me.wcy.music.utils.PermissionReq;
@@ -36,7 +44,7 @@ import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 
 public class MusicActivity extends BaseActivity implements View.OnClickListener, QuitTimer.OnTimerListener,
-        NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+        NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener, IUserView {
     @Bind(R.id.drawer_layout)
     private DrawerLayout drawerLayout;
     @Bind(R.id.navigation_view)
@@ -71,6 +79,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onServiceBound() {
+
         setupView();
         updateWeather();
         controlPanel = new ControlPanel(flPlayBar);
@@ -266,14 +275,36 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
 //    }
 
     @Override
+    public void result(String result, Exception e) {
+        Gson gson = new Gson();
+        User user = gson.fromJson(result, User.class);
+        if (0 == user.getCode()) {
+            ToastUtils.show("暂无该用户");
+        } else {
+            Intent intent = new Intent(this, SettingInfoActivity.class);
+            intent.putExtra("scanUser", user);
+            startActivity(intent);
+        }
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case 0:
-                if (0 == resultCode) {
-                    recreate();
+                recreate();
+                break;
+            case 100:
+                if (null != data) {
+                    getUser(data.getStringExtra(Constant.CODED_CONTENT));
                 }
                 break;
+            default:
         }
+    }
+
+    private void getUser(String phoneNum) {
+        UserP userP = new UserP(this);
+        userP.getUser(new Params("phonenum", phoneNum));
     }
 
     @Override

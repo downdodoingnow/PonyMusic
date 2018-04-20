@@ -26,6 +26,16 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
 
+    <!-- 二维码扫描 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:name=".application.MusicApplication"
         android:allowBackup="true"
@@ -131,21 +141,26 @@
             android:label="@string/menu_friends"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ScanActivity"
-            android:label="@string/menu_scan"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".activity.CommonActivity"
             android:label="@string/common"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/login"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.RegisterActivity"
             android:label="@string/register"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.ItemInfoActivity" />
+        <activity
+            android:name=".activity.TwoCodeActivity"
+            android:label="@string/my_two_code"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.SendMassageActivity"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

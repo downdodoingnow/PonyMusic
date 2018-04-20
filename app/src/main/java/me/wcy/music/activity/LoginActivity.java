@@ -15,11 +15,15 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 import me.wcy.music.IView.IUserView;
 import me.wcy.music.R;
 import me.wcy.music.model.Params;
 import me.wcy.music.model.User;
 import me.wcy.music.presenter.UserP;
+import me.wcy.music.storage.db.UserManger;
+import me.wcy.music.storage.db.greendao.UserDao;
 import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
@@ -36,9 +40,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     Button btLogin;
     @Bind(R.id.register_bnt)
     Button btRegister;
-
-    @Bind(R.id.login_ll)
-    LinearLayout mLoginLL;
 
     private String mTelphonenum;
     private String mPassword;
@@ -72,7 +73,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.login_bnt:
                 login();
-                hideSoftInput(mLoginLL);
+                hideSoftInput(etPhonenum);
                 break;
             case R.id.register_bnt:
                 startActivity(RegisterActivity.class);
@@ -133,9 +134,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             } else {
                 Preferences.saveLoginMode(true);
                 ToastUtils.show("登录成功");
+                insertToLocalDatabase(user);
                 finish();
             }
         }
+    }
+
+    /**
+     * 将该用户插入到本地数据库用于显示个人资料
+     */
+    public void insertToLocalDatabase(User user) {
+        UserDao userDao = UserManger.getInstance().getmUserDao();
+        //只保证本地数据库有一个用户
+        userDao.deleteAll();
+        userDao.insert(user);
     }
 }
 

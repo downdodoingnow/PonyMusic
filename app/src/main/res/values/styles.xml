@@ -6,6 +6,7 @@
         <item name="playBarBackground">@drawable/play_bar_bg_selector</item>
         <item name="textColor_bnt">@color/black</item>
         <item name="change_account">@color/grey_300_96p</item>
+        <item name="send_message">@color/white</item>
     </style>
 
     <style name="AppBaseTheme" parent="CommonStyle">
@@ -56,11 +57,13 @@
         <item name="playBarBackground">@drawable/play_bar_bg_selector_dark</item>
         <item name="textColor_bnt">@color/white</item>
         <item name="change_account">@color/grey_700_96p</item>
+        <item name="send_message">@color/black</item>
     </style>
 
     <attr name="playBarBackground" format="reference" />
     <attr name="textColor_bnt" format="reference" />
     <attr name="change_account" format="reference" />
+    <attr name="send_message" format="reference" />
 
     <style name="AppTheme" parent="AppBaseTheme" />
 

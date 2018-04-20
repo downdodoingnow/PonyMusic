@@ -5,15 +5,17 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
+import com.yzq.zxinglibrary.android.CaptureActivity;
+import com.yzq.zxinglibrary.bean.ZxingConfig;
+import com.yzq.zxinglibrary.common.Constant;
+
 import me.wcy.music.R;
-import me.wcy.music.activity.AboutActivity;
 import me.wcy.music.activity.FriendsActivity;
+import me.wcy.music.activity.LoginActivity;
 import me.wcy.music.activity.MusicActivity;
-import me.wcy.music.activity.ScanActivity;
 import me.wcy.music.activity.SettingActivity;
 import me.wcy.music.activity.SettingInfoActivity;
 import me.wcy.music.activity.SetttingSkinActivity;
-import me.wcy.music.adapter.SettingSkinAdapter;
 import me.wcy.music.constants.Actions;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.service.QuitTimer;
@@ -46,19 +48,44 @@ public class NaviMenuExecutor {
                 exit();
                 return true;
             case R.id.action_info:
-                startActivity(SettingInfoActivity.class);
+                if (isLogin()) {
+                    startActivity(SettingInfoActivity.class);
+                }
                 return true;
             case R.id.action_friends:
-                startActivity(FriendsActivity.class);
+                if (isLogin()) {
+                    startActivity(FriendsActivity.class);
+                }
                 return true;
             case R.id.action_scan:
-                startActivity(ScanActivity.class);
+                if (isLogin()) {
+                    startActivityToScan();
+                }
                 return true;
             case R.id.action_skin:
                 activity.startActivityForResult(new Intent(activity, SetttingSkinActivity.class), 0);
                 return true;
         }
         return false;
+    }
+
+    /**
+     * 用于提示用户进行登录
+     *
+     * @return
+     */
+    private boolean isLogin() {
+        if (!Preferences.isLogin()) {
+            new AlertDialogUtils(activity, new AlertDialogUtils.IConfirmCallBack() {
+                @Override
+                public void operate(DialogInterface dialog) {
+                    dialog.dismiss();
+                    startActivity(LoginActivity.class);
+                }
+            }).build(R.string.not_login);
+            return false;
+        }
+        return true;
     }
 
     private void exit() {
@@ -70,6 +97,16 @@ public class NaviMenuExecutor {
                 PlayService.startCommand(activity, Actions.ACTION_STOP);
             }
         }).build(R.string.menu_is_exit);
+    }
+
+    private void startActivityToScan() {
+        ZxingConfig config = new ZxingConfig();
+        config.setShowAlbum(true);
+        config.setShowbottomLayout(true);
+
+        Intent intent = new Intent(activity, CaptureActivity.class);
+        intent.putExtra(Constant.INTENT_ZXING_CONFIG, config);
+        activity.startActivityForResult(intent, 100);
     }
 
     private void startActivity(Class<?> cls) {

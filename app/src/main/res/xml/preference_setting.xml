@@ -47,5 +47,4 @@
             android:key="@string/setting_key_about"
             android:title="@string/about_system" />
     </PreferenceCategory>
-    <Preference android:key="@string/setting_key_change_account" />
 </PreferenceScreen>

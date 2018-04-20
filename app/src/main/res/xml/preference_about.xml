@@ -9,23 +9,23 @@
             android:key="share"
             android:title="@string/menu_share" />
         <!--<Preference-->
-            <!--android:key="star"-->
-            <!--android:summary="前往项目地址给个Star，鼓励作者"-->
-            <!--android:title="给我点赞" />-->
+        <!--android:key="star"-->
+        <!--android:summary="前往项目地址给个Star，鼓励作者"-->
+        <!--android:title="给我点赞" />-->
     </PreferenceCategory>
     <!--<PreferenceCategory android:title="关于作者">-->
-        <!--<Preference-->
-            <!--android:key="weibo"-->
-            <!--android:summary="@string/about_weibo"-->
-            <!--android:title="微博" />-->
-        <!--<Preference-->
-            <!--android:key="jianshu"-->
-            <!--android:summary="@string/about_jianshu"-->
-            <!--android:title="简书" />-->
-        <!--<Preference-->
-            <!--android:key="github"-->
-            <!--android:summary="@string/about_github"-->
-            <!--android:title="Github" />-->
+    <!--<Preference-->
+    <!--android:key="weibo"-->
+    <!--android:summary="@string/about_weibo"-->
+    <!--android:title="微博" />-->
+    <!--<Preference-->
+    <!--android:key="jianshu"-->
+    <!--android:summary="@string/about_jianshu"-->
+    <!--android:title="简书" />-->
+    <!--<Preference-->
+    <!--android:key="github"-->
+    <!--android:summary="@string/about_github"-->
+    <!--android:title="Github" />-->
     <!--</PreferenceCategory>-->
     <PreferenceCategory android:title="版权">
         <Preference
@@ -34,5 +34,8 @@
         <Preference
             android:summary="高德地图"
             android:title="天气数据" />
+        <Preference
+            android:summary="短信验证码"
+            android:title="Mob" />
     </PreferenceCategory>
 </PreferenceScreen>

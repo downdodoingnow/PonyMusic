@@ -1,19 +1,73 @@
 package me.wcy.music.model;
 
-import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Property;
 
+import java.io.Serializable;
+import org.greenrobot.greendao.annotation.Generated;
+
+@Entity
 public class User implements Serializable {
+
+    private static final long serialVersionUID = 1;
+
+    @Property(nameInDb = "birthday")
     private String birthday;
+    @Property(nameInDb = "area")
     private String area;
+    @Property(nameInDb = "password")
     private String password;
+    @Property(nameInDb = "code")
     private int code;
+    @Property(nameInDb = "isOnLine")
     private int isOnLine;
+    @Property(nameInDb = "signature")
     private String signature;
+    @Property(nameInDb = "sex")
     private String sex;
+    @Property(nameInDb = "phoneNum")
     private String phoneNum;
+    @Property(nameInDb = "userName")
     private String userName;
-    private int userID;
+    @Id(autoincrement = true)
+    @Property(nameInDb = "userID")
+    private long userID;
+    @Property(nameInDb = "age")
     private int age;
+
+    public User() {
+
+    }
+
+    public User(String birthday, String area, String password, int code, int isOnLine, String signature, String sex, String phoneNum, String userName, int userID, int age) {
+        this.birthday = birthday;
+        this.area = area;
+        this.password = password;
+        this.code = code;
+        this.isOnLine = isOnLine;
+        this.signature = signature;
+        this.sex = sex;
+        this.phoneNum = phoneNum;
+        this.userName = userName;
+        this.userID = userID;
+        this.age = age;
+    }
+
+    @Generated(hash = 1301299514)
+    public User(String birthday, String area, String password, int code, int isOnLine, String signature, String sex, String phoneNum, String userName, long userID, int age) {
+        this.birthday = birthday;
+        this.area = area;
+        this.password = password;
+        this.code = code;
+        this.isOnLine = isOnLine;
+        this.signature = signature;
+        this.sex = sex;
+        this.phoneNum = phoneNum;
+        this.userName = userName;
+        this.userID = userID;
+        this.age = age;
+    }
 
     public String getBirthday() {
         return birthday;
@@ -87,11 +141,11 @@ public class User implements Serializable {
         this.userName = userName;
     }
 
-    public int getUserID() {
+    public long getUserID() {
         return userID;
     }
 
-    public void setUserID(int userID) {
+    public void setUserID(long userID) {
         this.userID = userID;
     }
 

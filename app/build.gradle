@@ -82,4 +82,5 @@ dependencies {
     implementation 'me.wcy:lrcview:2.0.1'
     implementation 'com.hwangjr.rxbus:rxbus:2.0.0'
     implementation 'org.greenrobot:greendao:3.2.2'
+    compile 'com.github.yuzhiqiang1993:zxing:2.1.6'
 }

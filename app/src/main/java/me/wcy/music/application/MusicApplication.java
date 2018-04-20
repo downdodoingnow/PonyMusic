@@ -7,6 +7,7 @@ import me.wcy.music.R;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.storage.db.DBManager;
 import me.wcy.music.storage.db.HistorySearchDBManager;
+import me.wcy.music.storage.db.UserManger;
 
 /**
  * 自定义Application
@@ -18,6 +19,7 @@ public class MusicApplication extends Application {
             R.style.AppBaseThemePink, R.style.AppBaseThemeRoyalBlue, R.style.AppBaseThemeDeepSkyBlue, R.style.AppBaseThemeDeepLightGreen,
             R.style.AppBaseThemeDeepLightOrange, R.style.AppBaseThemeDarkSlateBlue
     };
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -26,6 +28,7 @@ public class MusicApplication extends Application {
         ForegroundObserver.init(this);
         DBManager.get().init(this);
         HistorySearchDBManager.getInstance().init(this);
+        UserManger.getInstance().init(this);
 
         Intent intent = new Intent(this, PlayService.class);
         startService(intent);

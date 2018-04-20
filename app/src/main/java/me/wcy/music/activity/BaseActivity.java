@@ -71,7 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     public void hideSoftInput(View view) {
         if (null != imm) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

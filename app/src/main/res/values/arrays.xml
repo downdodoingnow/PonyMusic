@@ -26,7 +26,14 @@
     <string-array name="search_music_dialog_no_download">
         <item>分享</item>
     </string-array>
-
+    <string-array name="friend_more_dialog">
+        <item>取消关注</item>
+        <item>发送私信</item>
+    </string-array>
+    <string-array name="head_photo_dialog">
+        <item>拍照</item>
+        <item>相册</item>
+    </string-array>
     <string-array name="timer_text">
         <item>不开启</item>
         <item>10分钟后</item>

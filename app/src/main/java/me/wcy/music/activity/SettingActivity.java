@@ -1,12 +1,15 @@
 package me.wcy.music.activity;
 
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.audiofx.AudioEffect;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
 
 import com.hwangjr.rxbus.RxBus;
 
@@ -14,10 +17,16 @@ import me.wcy.music.R;
 import me.wcy.music.constants.RxBusTags;
 import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.storage.preference.Preferences;
+import me.wcy.music.utils.AlertDialogUtils;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.ToastUtils;
+import me.wcy.music.utils.binding.Bind;
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity implements View.OnClickListener {
+
+    @Bind(R.id.login_tink)
+    TextView tvLoginTink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +35,8 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     protected void onServiceBound() {
+        tvLoginTink.setOnClickListener(this);
+        initLoginBnt();
         SettingFragment settingFragment = new SettingFragment();
         getFragmentManager()
                 .beginTransaction()
@@ -33,12 +44,46 @@ public class SettingActivity extends BaseActivity {
                 .commit();
     }
 
+    @Override
+    public void onClick(View v) {
+        //跳转到登录页面
+        if (!Preferences.isLogin()) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivityForResult(intent, 0);
+        } else {//退出当前帐号
+            new AlertDialogUtils(this, new AlertDialogUtils.IConfirmCallBack() {
+                @Override
+                public void operate(DialogInterface dialog) {
+                    Preferences.saveLoginMode(false);
+                    initLoginBnt();
+                }
+            }).build(R.string.is_exit);
+        }
+    }
+
+    //初始化登录按钮
+    private void initLoginBnt() {
+
+        if (Preferences.isLogin()) {
+            tvLoginTink.setText(getResources().getString(R.string.exit_login));
+        } else {
+            tvLoginTink.setText(getResources().getString(R.string.login));
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            initLoginBnt();
+        }
+    }
+
     public static class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
         private Preference mSoundEffect;
         private Preference mFilterSize;
         private Preference mFilterTime;
         private Preference mAbout;
-        private Preference mChangeAccount;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -49,28 +94,15 @@ public class SettingActivity extends BaseActivity {
             mFilterSize = findPreference(getString(R.string.setting_key_filter_size));
             mFilterTime = findPreference(getString(R.string.setting_key_filter_time));
             mAbout = findPreference(getString(R.string.setting_key_about));
-            mChangeAccount = findPreference(getString(R.string.setting_key_change_account));
-
-            initLoginBnt();
 
             mSoundEffect.setOnPreferenceClickListener(this);
             mAbout.setOnPreferenceClickListener(this);
-            mChangeAccount.setOnPreferenceClickListener(this);
 
             mFilterSize.setOnPreferenceChangeListener(this);
             mFilterTime.setOnPreferenceChangeListener(this);
 
             mFilterSize.setSummary(getSummary(Preferences.getFilterSize(), R.array.filter_size_entries, R.array.filter_size_entry_values));
             mFilterTime.setSummary(getSummary(Preferences.getFilterTime(), R.array.filter_time_entries, R.array.filter_time_entry_values));
-        }
-
-        //初始化登录按钮
-        private void initLoginBnt() {
-            if (Preferences.isLogin()) {
-                mChangeAccount.setLayoutResource(R.layout.chang_account);
-            } else {
-                mChangeAccount.setLayoutResource(R.layout.login_bnt);
-            }
         }
 
         @Override
@@ -80,32 +112,14 @@ public class SettingActivity extends BaseActivity {
                 return true;
             } else if (preference == mAbout) {
                 startActivity(AboutActivity.class);
-
-                return true;
-            } else if (preference == mChangeAccount) {
-                //跳转到登录页面
-                if (!Preferences.isLogin()) {
-                    Intent intent = new Intent(getContext(), LoginActivity.class);
-                    startActivityForResult(intent, 0);
-                } else {//退出当前帐号
-                    Preferences.saveLoginMode(false);
-                    initLoginBnt();
-                }
                 return true;
             }
             return false;
         }
 
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            if (requestCode == 0) {
-                getActivity().recreate();
-            }
-        }
-
         public void startActivity(Class<?> cls) {
-
+            Intent intent = new Intent(getContext(), cls);
+            startActivity(intent);
         }
 
         private void startEqualizer() {

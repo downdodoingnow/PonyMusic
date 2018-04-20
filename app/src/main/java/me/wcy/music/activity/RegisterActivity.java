@@ -6,15 +6,23 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.List;
+
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import me.wcy.music.IView.IUserView;
 import me.wcy.music.R;
+import me.wcy.music.model.Params;
+import me.wcy.music.model.User;
+import me.wcy.music.presenter.UserP;
+import me.wcy.music.storage.db.UserManger;
+import me.wcy.music.storage.db.greendao.UserDao;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 
@@ -40,6 +48,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private CountDownTimer mCountDownTimer;
 
     private String whichActivity;
+    private User mUser;
+    private Handler mHandlSMS = new SMSHandler();
+    private UserP userP;
 
     private EventHandler mHandler = new EventHandler() {
         @Override
@@ -49,32 +60,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             msg.arg1 = event;
             msg.arg2 = result;
             mHandlSMS.sendMessage(msg);
-
-        }
-    };
-    private Handler mHandlSMS = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            int event = msg.arg1;
-            int result = msg.arg2;
-            if (result == SMSSDK.RESULT_COMPLETE) {
-                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                    if (null != whichActivity) {
-
-                    } else {
-
-                    }
-                }
-            }
-            if (result == SMSSDK.RESULT_ERROR) {
-                cancelProgress();
-                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                    ToastUtils.show("验证码输入错误，请重新获取！");
-                } else {
-                    ToastUtils.show("获取验证码失败！");
-                }
-            }
         }
     };
 
@@ -92,7 +77,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         if (null != whichActivity) {
             setTitle("忘记密码");
         }
+        userP = new UserP(this);
 
+        mUser = new User();
         btNext.setOnClickListener(this);
         tvGetCode.setOnClickListener(this);
 
@@ -171,8 +158,14 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     public void next() {
         if (isInputOk()) {
-            showProgress();
-            SMSSDK.submitVerificationCode("86", mPhoneNum, mCode);
+            mUser.setPhoneNum(mPhoneNum);
+            mUser.setPassword(mPassword);
+
+            hideSoftInput(etPhonenum);
+
+            //showProgress();
+            //SMSSDK.submitVerificationCode("86", mPhoneNum, mCode);
+            register();
         }
     }
 
@@ -190,12 +183,62 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void result(String result, Exception e) {
-
+        cancelProgress();
+        if (result.equals("0")) {
+            ToastUtils.show("密码修改失敗");
+        } else if (result.equals("1")) {
+            ToastUtils.show("密码修改成功");
+            finish();
+        } else {
+            ToastUtils.show("该用户不存在，请注册！");
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         SMSSDK.registerEventHandler(mHandler);
+    }
+
+    public void forgetPassword() {
+        Params password = new Params("password", mPassword);
+        Params phoneNum = new Params("phoneNum", mPhoneNum);
+        Params[] params = new Params[]{password, phoneNum};
+
+        userP.update(params);
+    }
+
+    public void register() {
+        Intent intent = new Intent(RegisterActivity.this, SettingInfoActivity.class);
+        intent.putExtra("user", mUser);
+        startActivity(intent);
+    }
+
+    class SMSHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int event = msg.arg1;
+            int result = msg.arg2;
+            if (result == SMSSDK.RESULT_COMPLETE) {
+                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                    //忘记密码
+                    if (null != whichActivity) {
+                        forgetPassword();
+                    } else {//注册
+                        cancelProgress();
+                        register();
+                    }
+                }
+            }
+            if (result == SMSSDK.RESULT_ERROR) {
+                cancelProgress();
+                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+                    ToastUtils.show("验证码输入错误，请重新获取！");
+                } else {
+                    ToastUtils.show("获取验证码失败！");
+                }
+            }
+        }
     }
 }

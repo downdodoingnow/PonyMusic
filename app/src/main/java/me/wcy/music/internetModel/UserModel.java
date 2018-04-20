@@ -1,33 +1,31 @@
 package me.wcy.music.internetModel;
 
-import android.util.Log;
-
-import com.zhy.http.okhttp.OkHttpUtils;
-import com.zhy.http.okhttp.callback.StringCallback;
-
-import me.wcy.music.constants.Keys;
 import me.wcy.music.model.Params;
-import okhttp3.Call;
+import me.wcy.music.utils.GetDatabaseUtil;
 
 public class UserModel {
 
     public void login(String action, Params[] params, ICallBack callBack) {
-        Log.i("login", "login: " + (Keys.ADRRESS + action));
-        OkHttpUtils.get().url("http://172.17.115.0:8080/SSM/user/login")
-                .addParams(params[0].key, params[0].value)
-                .addParams(params[1].key, params[1].value)
-                .build()
-                .execute(new StringCallback() {
+        GetDatabaseUtil.okhttpUtil(action, callBack, params);
+    }
 
-                    @Override
-                    public void onResponse(String response, int id) {
-                        callBack.loginResult(response, null);
-                    }
+    public void register(String action, Params params, ICallBack iCallBack) {
+        GetDatabaseUtil.okhttpUtil(action, iCallBack, params);
+    }
 
-                    @Override
-                    public void onError(Call call, Exception e, int id) {
-                        callBack.loginResult("登录失败,请重试！", e);
-                    }
-                });
+    public void updata(String action, Params[] params, ICallBack iCallBack) {
+        GetDatabaseUtil.okhttpUtil(action, iCallBack, params);
+    }
+
+    public void updataUser(String action, Params params, ICallBack iCallBack) {
+        GetDatabaseUtil.okhttpUtil(action, iCallBack, params);
+    }
+
+    public void getUser(String action, Params params, ICallBack iCallBack) {
+        GetDatabaseUtil.okhttpUtil(action, iCallBack, params);
+    }
+
+    public void getFriend(String action, Params params, ICallBack iCallBack) {
+        GetDatabaseUtil.okhttpUtil(action, iCallBack, params);
     }
 }
