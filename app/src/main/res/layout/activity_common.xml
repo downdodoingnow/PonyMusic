@@ -6,23 +6,46 @@
 
     <include layout="@layout/include_app_bar" />
 
-    <ListView
-        android:id="@+id/lv_local_music"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:divider="@null"
-        android:paddingBottom="@dimen/play_bar_height" />
+        android:layout_height="30dp"
+        android:background="?attr/change_account">
 
-    <TextView
-        android:id="@+id/v_searching"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/screen_tips_top"
-        android:text="正在扫描…"
-        android:textColor="@color/grey"
-        android:textSize="14sp"
-        android:visibility="gone" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:text="评论" />
 
+        <TextView
+            android:id="@+id/publish_common"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_left"
+            android:layout_marginRight="@dimen/margin_left"
+            android:text="发表评论" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/common_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            android:id="@+id/ll_loading"
+            layout="@layout/include_loading"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/ll_load_fail"
+            layout="@layout/include_load_fail"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

@@ -74,7 +74,6 @@ public class LocalMusicFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
-
         mPlayListMusicNum.setText("(" + AudioPlayer.get().getMusicList().size() + ")");
     }
 

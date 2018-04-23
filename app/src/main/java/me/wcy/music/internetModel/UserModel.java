@@ -24,7 +24,9 @@ public class UserModel {
     public void getUser(String action, Params params, ICallBack iCallBack) {
         GetDatabaseUtil.okhttpUtil(action, iCallBack, params);
     }
-
+    public void getUserById(String action, Params params, ICallBack iCallBack) {
+        GetDatabaseUtil.okhttpUtil(action, iCallBack, params);
+    }
     public void getFriend(String action, Params params, ICallBack iCallBack) {
         GetDatabaseUtil.okhttpUtil(action, iCallBack, params);
     }

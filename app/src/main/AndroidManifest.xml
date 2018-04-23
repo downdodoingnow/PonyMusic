@@ -161,6 +161,10 @@
         <activity
             android:name=".activity.SendMassageActivity"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.PublishCommonActivity"
+            android:label="@string/publish_common"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

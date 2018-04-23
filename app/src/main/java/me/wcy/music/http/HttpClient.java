@@ -28,6 +28,7 @@ public class HttpClient {
     private static final String METHOD_ARTIST_INFO = "baidu.ting.artist.getInfo";
     private static final String METHOD_SEARCH_MUSIC = "baidu.ting.search.catalogSug";
     private static final String METHOD_LRC = "baidu.ting.song.lry";
+    private static final String RECOMMONED_SONG_URL = "baidu.ting.song.getRecommandSongList";
     private static final String PARAM_METHOD = "method";
     private static final String PARAM_TYPE = "type";
     private static final String PARAM_SIZE = "size";
@@ -35,6 +36,7 @@ public class HttpClient {
     private static final String PARAM_SONG_ID = "songid";
     private static final String PARAM_TING_UID = "tinguid";
     private static final String PARAM_QUERY = "query";
+    private static final String RECOMMONEDNUM = "num";
 
     static {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -214,6 +216,30 @@ public class HttpClient {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_ARTIST_INFO)
                 .addParams(PARAM_TING_UID, tingUid)
+                .build()
+                .execute(new JsonCallback<ArtistInfo>(ArtistInfo.class) {
+                    @Override
+                    public void onResponse(ArtistInfo response, int id) {
+                        callback.onSuccess(response);
+                    }
+
+                    @Override
+                    public void onError(Call call, Exception e, int id) {
+                        callback.onFail(e);
+                    }
+
+                    @Override
+                    public void onAfter(int id) {
+                        callback.onFinish();
+                    }
+                });
+    }
+
+    public static void getRecommendSong(String songId, int num, final HttpCallback<ArtistInfo> callback) {
+        OkHttpUtils.get().url(BASE_URL)
+                .addParams(PARAM_METHOD, RECOMMONED_SONG_URL)
+                .addParams(PARAM_SONG_ID, songId)
+                .addParams(RECOMMONEDNUM, num + "")
                 .build()
                 .execute(new JsonCallback<ArtistInfo>(ArtistInfo.class) {
                     @Override

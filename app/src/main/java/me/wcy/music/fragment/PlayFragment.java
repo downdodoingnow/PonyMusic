@@ -40,6 +40,7 @@ import me.wcy.music.service.OnPlayerEventListener;
 import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
+import me.wcy.music.utils.LoginUtil;
 import me.wcy.music.utils.ScreenUtils;
 import me.wcy.music.utils.SystemUtils;
 import me.wcy.music.utils.ToastUtils;
@@ -97,6 +98,8 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
     private List<View> mViewPagerContent;
     private int mLastProgress;
     private boolean isDraggingProgress;
+
+    private Music music;
 
     @Nullable
     @Override
@@ -242,7 +245,17 @@ public class PlayFragment extends BaseFragment implements View.OnClickListener,
                 shareMusic();
                 break;
             case R.id.common:
-                startActivity(CommonActivity.class);
+                Intent intent = new Intent(getContext(), CommonActivity.class);
+                music = AudioPlayer.get().getPlayMusic();
+                if (LoginUtil.isLogin(getContext())) {
+                    if (null != music) {
+                        intent.putExtra("musicName", music.getAlbum());
+                        intent.putExtra("musicArtist", music.getArtist());
+                        startActivity(intent);
+                    } else {
+                        ToastUtils.show("暂无歌曲，请添加歌曲");
+                    }
+                }
                 break;
             default:
                 break;

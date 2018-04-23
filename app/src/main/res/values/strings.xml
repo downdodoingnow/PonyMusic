@@ -106,6 +106,7 @@
     <string name="change_info_tink">请输入修改信息</string>
     <string name="not_login">你还未登录，是否登录？</string>
     <string name="my_two_code">我的二维码</string>
+    <string name="publish_common">发表评论</string>
     <string name="two_code_tink">扫描上面二维码即可进行好友关注</string>
     <string name="friend_tink">数据加载失败...</string>
     <string name="is_cancle_follow">是否取消关注</string>

@@ -129,8 +129,8 @@ public class SendMassageActivity extends BaseActivity implements IUserView, View
     public void fillData() {
         adapter = new SendMessageAdapter(mData, this);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setStackFromEnd(true);
         rcSendMessage.setLayoutManager(layoutManager);
         rcSendMessage.setAdapter(adapter);
+        rcSendMessage.scrollToPosition(mData.size() - 1);
     }
 }

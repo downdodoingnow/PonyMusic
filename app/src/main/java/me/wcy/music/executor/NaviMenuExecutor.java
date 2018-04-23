@@ -1,5 +1,6 @@
 package me.wcy.music.executor;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +22,7 @@ import me.wcy.music.service.PlayService;
 import me.wcy.music.service.QuitTimer;
 import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.AlertDialogUtils;
+import me.wcy.music.utils.LoginUtil;
 import me.wcy.music.utils.ToastUtils;
 
 /**
@@ -48,17 +50,17 @@ public class NaviMenuExecutor {
                 exit();
                 return true;
             case R.id.action_info:
-                if (isLogin()) {
+                if (LoginUtil.isLogin(activity)) {
                     startActivity(SettingInfoActivity.class);
                 }
                 return true;
             case R.id.action_friends:
-                if (isLogin()) {
+                if (LoginUtil.isLogin(activity)) {
                     startActivity(FriendsActivity.class);
                 }
                 return true;
             case R.id.action_scan:
-                if (isLogin()) {
+                if (LoginUtil.isLogin(activity)) {
                     startActivityToScan();
                 }
                 return true;
@@ -67,25 +69,6 @@ public class NaviMenuExecutor {
                 return true;
         }
         return false;
-    }
-
-    /**
-     * 用于提示用户进行登录
-     *
-     * @return
-     */
-    private boolean isLogin() {
-        if (!Preferences.isLogin()) {
-            new AlertDialogUtils(activity, new AlertDialogUtils.IConfirmCallBack() {
-                @Override
-                public void operate(DialogInterface dialog) {
-                    dialog.dismiss();
-                    startActivity(LoginActivity.class);
-                }
-            }).build(R.string.not_login);
-            return false;
-        }
-        return true;
     }
 
     private void exit() {

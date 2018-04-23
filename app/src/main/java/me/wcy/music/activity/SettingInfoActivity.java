@@ -86,6 +86,9 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
     //用于表示是否是修改信息
     private int year = 1990, month = 1, dayOgMonth = 1;
 
+    private long userID;
+    private String userName;
+    private boolean isFollow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,12 +118,20 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
             setTitle("好友资料");
             initTextView(mFrienduser);
         }
+
+        userID = getIntent().getLongExtra("userID", 0);
+        userName = getIntent().getStringExtra("userName");
+        if (0 != userID && null != userName) {
+            setTitle(userName);
+            btSave.setText("关注");
+            btSave.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     protected void onServiceBound() {
         gtForwardData();
-        if (null == mScanUser && null == mFrienduser) {
+        if (null == mScanUser && null == mFrienduser && null == userName) {
             llUsername.setOnClickListener(this);
             reSex.setOnClickListener(this);
             reArea.setOnClickListener(this);
@@ -131,15 +142,23 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
 
         reTwoCode.setOnClickListener(this);
         btSave.setOnClickListener(this);
-
-        //从注册页面进行跳转那么肯定没有进行登录操作或者已经退出登录
-        if (Preferences.isLogin()) {
-            if (null == mScanUser && null == mFrienduser && null == mRegisterUser) {
-                initInfo();
-            }
+        if (null != userName) {
+            getUser();
         } else {
-            reTwoCode.setVisibility(View.GONE);
+            if (Preferences.isLogin()) {
+                if (null == mScanUser && null == mFrienduser && null == mRegisterUser && null == userName) {
+                    initInfo();
+                }
+            } else {
+                reTwoCode.setVisibility(View.GONE);
+            }
         }
+    }
+
+    private void getUser() {
+        UserP userP = new UserP(this);
+        Params userIDParam = new Params("userID", userID + "");
+        userP.getUserByID(userIDParam);
     }
 
     //初始化资料
@@ -312,8 +331,9 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
 
             params = new Params("user", joo.toString());
             userP.register(params);
-        } else if (null != mScanUser) {
+        } else if (null != mScanUser || null != userName) {
             follow();
+            isFollow = true;
         } else {
             jsonElement = gson.toJsonTree(mInfoUser, User.class);
             joo = jsonElement.getAsJsonObject();
@@ -328,7 +348,13 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
      */
     public void follow() {
         Friend friend = new Friend();
-        friend.setFriendUserID(mScanUser.getUserID());
+        long FriendUserID;
+        if (null != userName) {
+            FriendUserID = userID;
+        } else {
+            FriendUserID = mScanUser.getUserID();
+        }
+        friend.setFriendUserID(FriendUserID);
         friend.setUserID(UserManger.getInstance().getmUserDao().queryBuilder().list().get(0).getUserID());
 
         JsonElement jsonElement = new Gson().toJsonTree(friend, Friend.class);
@@ -351,16 +377,27 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
         if (null != mRegisterUser) {
             registerResult(result);
         } else if (null != mScanUser) {
-            if (result.equals("3")) {
-                ToastUtils.show("你已经关注了该用户");
-            } else if (result.equals("1")) {
-                ToastUtils.show("关注成功");
-                btSave.setVisibility(View.GONE);
+            followResult(result);
+        } else if (null != userName) {
+            if (isFollow) {
+                followResult(result);
             } else {
-                ToastUtils.show("关注失败");
+                initTextView(new Gson().fromJson(result, User.class));
             }
         } else {
             changeInfoResult(result);
+        }
+    }
+
+    private void followResult(String result) {
+        if (result.equals("3")) {
+            ToastUtils.show("你已经关注了该用户");
+            btSave.setVisibility(View.GONE);
+        } else if (result.equals("1")) {
+            ToastUtils.show("关注成功");
+            btSave.setVisibility(View.GONE);
+        } else {
+            ToastUtils.show("关注失败");
         }
     }
 

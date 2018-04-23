@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/include_app_bar" />
+
+    <EditText
+        android:id="@+id/publish_et"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_margin="@dimen/margin_left"
+        android:background="@drawable/publish_common_back"
+        android:gravity="top"
+        android:padding="@dimen/margin_left"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/publish_bnt"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/login_bnt_back"
+        android:text="发表"
+        android:textColor="@color/white" />
+</LinearLayout>
