@@ -15,6 +15,7 @@ import java.util.List;
 import me.wcy.music.R;
 import me.wcy.music.activity.SettingInfoActivity;
 import me.wcy.music.adapter.IInterface.IOnItemClick;
+import me.wcy.music.adapter.IInterface.OnPraiseClick;
 import me.wcy.music.model.Common;
 import me.wcy.music.utils.CircleImageView;
 import me.wcy.music.utils.ToastUtils;
@@ -23,15 +24,21 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.Holder> {
 
     private Context mContext;
     private List<Common> mData;
+    private OnPraiseClick onPraiseClick;
+    private View view;
 
     public CommonAdapter(Context mContext, List<Common> mData) {
         this.mContext = mContext;
         this.mData = mData;
     }
 
+    public void setOnPraiseClick(OnPraiseClick onPraiseClick) {
+        this.onPraiseClick = onPraiseClick;
+    }
+
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.common_item, parent, false);
+        view = LayoutInflater.from(mContext).inflate(R.layout.common_item, parent, false);
         Holder holder = new Holder(view);
 
         return holder;
@@ -39,13 +46,16 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.Holder> {
 
     @Override
     public void onBindViewHolder(Holder holder, final int position) {
-        Log.i("onBindViewHolder", "onBindViewHolder: " + holder.username);
         Common common = mData.get(position);
         holder.username.setText(common.getUsername());
         holder.common.setText(common.getContent());
         holder.time.setText(common.getTime());
         holder.praisenum.setText(common.getPraiseNum() + "");
-
+        if (0 == common.getPraiseType()) {
+            holder.praiseImg.setImageResource(R.drawable.ic_not_praise);
+        } else {
+            holder.praiseImg.setImageResource(R.drawable.ic_praise);
+        }
         setClick(holder, position);
     }
 
@@ -62,11 +72,7 @@ public class CommonAdapter extends RecyclerView.Adapter<CommonAdapter.Holder> {
         holder.praiseImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Common common = mData.get(position);
-                common.setPraiseNum(common.getPraiseNum() + 1);
-
-                holder.praiseImg.setImageResource(R.drawable.ic_praise);
-                holder.praisenum.setText(common.getPraiseNum() + "");
+                onPraiseClick.onPraiseClick(holder.praiseImg, holder.praisenum, position);
             }
         });
     }

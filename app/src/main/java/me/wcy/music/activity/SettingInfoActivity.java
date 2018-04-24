@@ -97,13 +97,16 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void gtForwardData() {
+        userDao = UserManger.getInstance().getmUserDao();
+        mInfoUser = userDao.queryBuilder().list().get(0);
         //从扫一扫页面传递过来
         mScanUser = (User) getIntent().getSerializableExtra("scanUser");
-        if (null != mScanUser) {
+        if (null != mScanUser && !isMySelf(mScanUser.getUserID())) {
             btSave.setText("关注");
             btSave.setVisibility(View.VISIBLE);
             initTextView(mScanUser);
             setTitle("资料信息");
+            return;
         }
         //当从注册页面传递过来的时候
         mRegisterUser = (User) getIntent().getSerializableExtra("user");
@@ -111,21 +114,34 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
             btSave.setVisibility(View.VISIBLE);
             tvPhoneNum.setText(mRegisterUser.getPhoneNum());
             user = mRegisterUser;
+            return;
         }
         //从好友页面进行跳转
         mFrienduser = (User) getIntent().getSerializableExtra("frienduser");
         if (null != mFrienduser) {
             setTitle("好友资料");
             initTextView(mFrienduser);
+            return;
         }
 
         userID = getIntent().getLongExtra("userID", 0);
         userName = getIntent().getStringExtra("userName");
-        if (0 != userID && null != userName) {
+        if (0 != userID && null != userName && !isMySelf(userID)) {
             setTitle(userName);
             btSave.setText("关注");
             btSave.setVisibility(View.VISIBLE);
         }
+    }
+
+    //判断是否是自己的资料卡
+    private boolean isMySelf(long userID) {
+
+        if (mInfoUser.getUserID() == userID) {
+            mScanUser = null;
+            userName = null;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -163,9 +179,6 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
 
     //初始化资料
     public void initInfo() {
-        userDao = UserManger.getInstance().getmUserDao();
-        mInfoUser = userDao.queryBuilder().list().get(0);
-
         if (null != mInfoUser) {
             initTextView(mInfoUser);
             user = mInfoUser;
@@ -436,7 +449,7 @@ public class SettingInfoActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (null != data) {
+        if (null != data && null != data.getStringExtra("data")) {
             String dataInfo = data.getStringExtra("data");
             switch (requestCode) {
                 case 0:

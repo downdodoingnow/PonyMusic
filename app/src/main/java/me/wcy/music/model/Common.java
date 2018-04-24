@@ -1,7 +1,7 @@
 package me.wcy.music.model;
 
 public class Common {
-    private long CommonID;
+    private String commonID;
     private long userID;
     private long musicID;
     private String content;
@@ -13,12 +13,14 @@ public class Common {
     private String musicName;
     private String musicArtist;
 
-    public long getCommonID() {
-        return CommonID;
+    private int praiseType;
+
+    public String getCommonID() {
+        return commonID;
     }
 
-    public void setCommonID(long commonID) {
-        CommonID = commonID;
+    public void setCommonID(String commonID) {
+        this.commonID = commonID;
     }
 
     public long getUserID() {
@@ -83,5 +85,13 @@ public class Common {
 
     public void setMusicArtist(String musicArtist) {
         this.musicArtist = musicArtist;
+    }
+
+    public int getPraiseType() {
+        return praiseType;
+    }
+
+    public void setPraiseType(int praiseType) {
+        this.praiseType = praiseType;
     }
 }
