@@ -33,6 +33,10 @@ import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
 import me.wcy.music.fragment.SheetListFragment;
+import me.wcy.music.http.HttpCallback;
+import me.wcy.music.http.HttpClient;
+import me.wcy.music.model.ArtistInfo;
+import me.wcy.music.model.OnlineMusicList;
 import me.wcy.music.model.Params;
 import me.wcy.music.model.User;
 import me.wcy.music.presenter.UserP;
@@ -89,6 +93,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         parseIntent();
 
         disableNavigationViewScrollbars();
+
     }
 
     @Override

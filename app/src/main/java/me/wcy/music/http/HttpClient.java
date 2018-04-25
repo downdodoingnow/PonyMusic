@@ -15,6 +15,7 @@ import me.wcy.music.model.ArtistInfo;
 import me.wcy.music.model.DownloadInfo;
 import me.wcy.music.model.Lrc;
 import me.wcy.music.model.OnlineMusicList;
+import me.wcy.music.model.RecommonedMusicResult;
 import me.wcy.music.model.SearchMusic;
 import me.wcy.music.model.Splash;
 import okhttp3.Call;
@@ -34,6 +35,7 @@ public class HttpClient {
     private static final String PARAM_SIZE = "size";
     private static final String PARAM_OFFSET = "offset";
     private static final String PARAM_SONG_ID = "songid";
+    private static final String RECOMMONED_SONG_ID = "song_id";
     private static final String PARAM_TING_UID = "tinguid";
     private static final String PARAM_QUERY = "query";
     private static final String RECOMMONEDNUM = "num";
@@ -235,15 +237,15 @@ public class HttpClient {
                 });
     }
 
-    public static void getRecommendSong(String songId, int num, final HttpCallback<ArtistInfo> callback) {
+    public static void getRecommendSong(long songId, int num, final HttpCallback<RecommonedMusicResult> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, RECOMMONED_SONG_URL)
-                .addParams(PARAM_SONG_ID, songId)
-                .addParams(RECOMMONEDNUM, num + "")
+                .addParams(RECOMMONED_SONG_ID,String.valueOf(songId))
+                .addParams(RECOMMONEDNUM, String.valueOf(num))
                 .build()
-                .execute(new JsonCallback<ArtistInfo>(ArtistInfo.class) {
+                .execute(new JsonCallback<RecommonedMusicResult>(RecommonedMusicResult.class) {
                     @Override
-                    public void onResponse(ArtistInfo response, int id) {
+                    public void onResponse(RecommonedMusicResult response, int id) {
                         callback.onSuccess(response);
                     }
 

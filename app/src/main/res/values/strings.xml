@@ -87,6 +87,7 @@
     <string name="is_delete_all">是否清空历史</string>
     <string name="is_delete">是否删除</string>
     <string name="download_music">下载音乐</string>
+    <string name="recommoned_music">推荐列表</string>
     <string name="play_list">播放列表</string>
     <string name="is_exit">是否退出登录</string>
     <string name="login">登录</string>

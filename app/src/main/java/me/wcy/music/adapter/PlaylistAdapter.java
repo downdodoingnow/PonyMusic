@@ -8,11 +8,14 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import me.wcy.music.R;
 import me.wcy.music.adapter.IInterface.OnMoreClickListener;
 import me.wcy.music.model.Music;
+import me.wcy.music.model.OnlineMusic;
 import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.utils.CoverLoader;
 import me.wcy.music.utils.FileUtils;
@@ -24,11 +27,18 @@ import me.wcy.music.utils.binding.ViewBinder;
  */
 public class PlaylistAdapter extends BaseAdapter {
     private List<Music> musicList;
+    private List<OnlineMusic> mOnlineMisicList;
     private OnMoreClickListener listener;
     private boolean isPlaylist;
+    private String type = "";
 
     public PlaylistAdapter(List<Music> musicList) {
         this.musicList = musicList;
+    }
+
+    public PlaylistAdapter(List<OnlineMusic> mOnlineMisicList, String type) {
+        this.mOnlineMisicList = mOnlineMisicList;
+        this.type = type;
     }
 
     public void setIsPlaylist(boolean isPlaylist) {
@@ -41,12 +51,20 @@ public class PlaylistAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return musicList.size();
+        if (type.equals("recommoned")) {
+            return mOnlineMisicList.size();
+        } else {
+            return musicList.size();
+        }
     }
 
     @Override
     public Object getItem(int position) {
-        return musicList.get(position);
+        if (type.equals("recommoned")) {
+            return mOnlineMisicList.get(position);
+        } else {
+            return musicList.get(position);
+        }
     }
 
     @Override
@@ -64,13 +82,13 @@ public class PlaylistAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
         holder.vPlaying.setVisibility((isPlaylist && position == AudioPlayer.get().getPlayPosition()) ? View.VISIBLE : View.INVISIBLE);
-        Music music = musicList.get(position);
-        Bitmap cover = CoverLoader.get().loadThumb(music);
-        holder.ivCover.setImageBitmap(cover);
-        holder.tvTitle.setText(music.getTitle());
-        String artist = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
-        holder.tvArtist.setText(artist);
+        if (type.equals("recommoned")) {
+            setOnlineData(holder, position, parent);
+        } else {
+            setLocalData(holder, position);
+        }
         holder.ivMore.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onMoreClick(position);
@@ -80,8 +98,35 @@ public class PlaylistAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void setOnlineData(ViewHolder holder, int position, ViewGroup parent) {
+        OnlineMusic onlineMusic = mOnlineMisicList.get(position);
+        Glide.with(parent.getContext())
+                .load(onlineMusic.getPic_small())
+                .placeholder(R.drawable.default_cover)
+                .error(R.drawable.default_cover)
+                .into(holder.ivCover);
+        holder.tvTitle.setText(onlineMusic.getTitle());
+        String artist = FileUtils.getArtistAndAlbum(onlineMusic.getArtist_name(), onlineMusic.getAlbum_title());
+        holder.tvArtist.setText(artist);
+    }
+
+    public void setLocalData(ViewHolder holder, int position) {
+        Music music = musicList.get(position);
+
+        Bitmap cover = CoverLoader.get().loadThumb(music);
+        holder.ivCover.setImageBitmap(cover);
+        holder.tvTitle.setText(music.getTitle());
+        String artist = FileUtils.getArtistAndAlbum(music.getArtist(), music.getAlbum());
+        holder.tvArtist.setText(artist);
+    }
+
     private boolean isShowDivider(int position) {
-        return position != musicList.size() - 1;
+        if (type.equals("recommoned")) {
+            return position != mOnlineMisicList.size() - 1;
+        } else {
+            return position != musicList.size() - 1;
+        }
+
     }
 
     private static class ViewHolder {

@@ -49,6 +49,8 @@ public class LocalMusicFragment extends BaseFragment implements View.OnClickList
     RelativeLayout mDownloadMusic;
     @Bind(R.id.play_list_music)
     RelativeLayout mPlayListMusic;
+    @Bind(R.id.recommend_music)
+    RelativeLayout mRecommonedMusic;
 
     private ArrayList<Music> mMusicList;
     private ArrayList<Music> mDownloadMusicList;
@@ -65,6 +67,7 @@ public class LocalMusicFragment extends BaseFragment implements View.OnClickList
         mLocalMusic.setOnClickListener(this);
         mDownloadMusic.setOnClickListener(this);
         mPlayListMusic.setOnClickListener(this);
+        mRecommonedMusic.setOnClickListener(this);
 
         if (AppCache.get().getLocalMusicList().isEmpty()) {
             scanMusic(null);
@@ -95,6 +98,11 @@ public class LocalMusicFragment extends BaseFragment implements View.OnClickList
             case R.id.play_list_music:
                 Intent intentPlayList = new Intent(getContext(), PlaylistActivity.class);
                 startActivity(intentPlayList);
+                break;
+            case R.id.recommend_music:
+                Intent intentRecommoned = new Intent(getContext(), LocalMusicActivity.class);
+                intentRecommoned.putExtra("type", "recommoned");
+                startActivity(intentRecommoned);
                 break;
             default:
                 break;

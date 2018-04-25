@@ -16,7 +16,7 @@ import me.wcy.music.utils.FileUtils;
  */
 public abstract class DownloadOnlineMusic extends DownloadMusic {
     private OnlineMusic mOnlineMusic;
-
+    private String artist;
     public DownloadOnlineMusic(Activity activity, OnlineMusic onlineMusic) {
         super(activity);
         mOnlineMusic = onlineMusic;
@@ -24,7 +24,10 @@ public abstract class DownloadOnlineMusic extends DownloadMusic {
 
     @Override
     protected void download() {
-        final String artist = mOnlineMusic.getArtist_name();
+        artist = mOnlineMusic.getArtist_name();
+        if (null == artist) {
+            artist = mOnlineMusic.getAuthor();
+        }
         final String title = mOnlineMusic.getTitle();
 
         // 下载歌词

@@ -2,6 +2,7 @@ package me.wcy.music.executor;
 
 import android.app.Activity;
 import android.text.TextUtils;
+import android.util.Log;
 
 import java.io.File;
 
@@ -26,6 +27,9 @@ public abstract class PlayOnlineMusic extends PlayMusic {
     @Override
     protected void getPlayInfo() {
         String artist = mOnlineMusic.getArtist_name();
+        if (null == artist) {
+            artist = mOnlineMusic.getAuthor();
+        }
         String title = mOnlineMusic.getTitle();
 
         music = new Music();
@@ -56,7 +60,7 @@ public abstract class PlayOnlineMusic extends PlayMusic {
             mCounter++;
         }
         music.setCoverPath(albumFile.getPath());
-
+        Log.i("getMusicDownloadInfo", "getPlayInfo: " + mOnlineMusic.getSong_id());
         // 获取歌曲播放链接
         HttpClient.getMusicDownloadInfo(mOnlineMusic.getSong_id(), new HttpCallback<DownloadInfo>() {
             @Override
@@ -73,6 +77,7 @@ public abstract class PlayOnlineMusic extends PlayMusic {
 
             @Override
             public void onFail(Exception e) {
+                Log.i("onFail", "onFail: 获取歌曲播放链接");
                 onExecuteFail(e);
             }
         });

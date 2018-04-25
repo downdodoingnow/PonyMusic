@@ -22,6 +22,8 @@ public class OnlineMusic {
     private String album_title;
     @SerializedName("artist_name")
     private String artist_name;
+    @SerializedName("author")
+    private String author;
 
     public String getPic_big() {
         return pic_big;
@@ -85,5 +87,13 @@ public class OnlineMusic {
 
     public void setArtist_name(String artist_name) {
         this.artist_name = artist_name;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
     }
 }

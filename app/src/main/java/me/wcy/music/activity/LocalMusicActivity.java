@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -29,8 +30,16 @@ import me.wcy.music.adapter.PlaylistAdapter;
 import me.wcy.music.application.AppCache;
 import me.wcy.music.constants.Keys;
 import me.wcy.music.constants.RequestCode;
+import me.wcy.music.executor.DownloadOnlineMusic;
+import me.wcy.music.executor.PlayOnlineMusic;
+import me.wcy.music.executor.ShareOnlineMusic;
+import me.wcy.music.http.HttpCallback;
+import me.wcy.music.http.HttpClient;
 import me.wcy.music.model.Music;
+import me.wcy.music.model.OnlineMusic;
+import me.wcy.music.model.RecommonedMusicResult;
 import me.wcy.music.service.AudioPlayer;
+import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.ToastUtils;
@@ -46,55 +55,111 @@ public class LocalMusicActivity extends BaseActivity implements AdapterView.OnIt
 
     private LocalMusicActivity mContext;
 
-    private ArrayList<Music> mMusicList;
+    private ArrayList<Music> mMusicList = new ArrayList<>();
     private String type;
+    private List<OnlineMusic> recommonedMusics = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_music);
+        mContext = this;
     }
 
-    //初始化数据
-    public void initListView() {
-        AppCache.get().getLocalMusicList().clear();
-        AppCache.get().getLocalMusicList().addAll(mMusicList);
-        lvLocalMusic.setVisibility(View.VISIBLE);
-        vSearching.setVisibility(View.GONE);
-        adapter.notifyDataSetChanged();
+    public void showList(boolean isShow) {
+        if (isShow) {
+            lvLocalMusic.setVisibility(View.VISIBLE);
+            vSearching.setVisibility(View.GONE);
+        } else {
+            lvLocalMusic.setVisibility(View.GONE);
+            vSearching.setVisibility(View.VISIBLE);
+        }
     }
 
-    @Override
-    protected void onServiceBound() {
-        super.onServiceBound();
-
+    private void whichPage() {
         Intent intent = getIntent();
         type = intent.getStringExtra("type");
         if (type.equals("local")) {
             mMusicList = (ArrayList<Music>) getIntent().getSerializableExtra("music_list");
+            setTitle(R.string.local_music);
+        } else if (type.equals("recommoned")) {
+            getRecommonedMusic();
+            setTitle(R.string.recommoned_music);
         } else {
             mMusicList = (ArrayList<Music>) getIntent().getSerializableExtra("download_list");
+            setTitle(R.string.download_music_list);
+        }
+    }
+
+    @Override
+    protected void onServiceBound() {
+        whichPage();
+        if (type.equals("recommoned")) {
+            adapter = new PlaylistAdapter(recommonedMusics, type);
+        } else {
+            adapter = new PlaylistAdapter(AppCache.get().getLocalMusicList());
         }
 
-        adapter = new PlaylistAdapter(AppCache.get().getLocalMusicList());
         adapter.setOnMoreClickListener(this);
         lvLocalMusic.setAdapter(adapter);
         lvLocalMusic.setOnItemClickListener(this);
-        mContext = this;
 
-        if (null == mMusicList && AppCache.get().getLocalMusicList().isEmpty()) {
-            scanMusic();
-        } else {
-            initListView();
+        if (!type.equals("recommoned")) {
+            if (null == mMusicList || AppCache.get().getLocalMusicList().isEmpty()) {
+                scanMusic();
+            } else {
+                newLocalMusicList();
+            }
         }
+    }
+
+    public void getRecommonedMusic() {
+        showList(false);
+        HttpClient.getRecommendSong(567299854, 10, new HttpCallback<RecommonedMusicResult>() {
+            @Override
+            public void onSuccess(RecommonedMusicResult recommonedMusicList) {
+                if (null != recommonedMusicList.getResult()) {
+                    List<OnlineMusic> recommonedMusics1 = recommonedMusicList.getResult().getList();
+                    recommonedMusics.clear();
+                    recommonedMusics.addAll(recommonedMusics1);
+                    adapter.notifyDataSetChanged();
+                }
+                showList(true);
+            }
+
+            @Override
+            public void onFail(Exception e) {
+                Log.d("getRecommendSong", "onFail: ");
+            }
+        });
+    }
+
+    private void playOnLineMusic(OnlineMusic onlineMusic) {
+        new PlayOnlineMusic(this, onlineMusic) {
+            @Override
+            public void onPrepare() {
+                showProgress();
+            }
+
+            @Override
+            public void onExecuteSuccess(Music music) {
+                cancelProgress();
+                AudioPlayer.get().addAndPlay(music);
+                ToastUtils.show("已添加到播放列表");
+            }
+
+            @Override
+            public void onExecuteFail(Exception e) {
+                cancelProgress();
+                ToastUtils.show(R.string.unable_to_play);
+            }
+        }.execute();
     }
 
     /**
      * 当在首页获取音乐数据失败后再次进行获取
      */
     public void scanMusic() {
-        lvLocalMusic.setVisibility(View.GONE);
-        vSearching.setVisibility(View.VISIBLE);
         PermissionReq.with(this)
                 .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -102,20 +167,20 @@ public class LocalMusicActivity extends BaseActivity implements AdapterView.OnIt
                     @SuppressLint("StaticFieldLeak")
                     @Override
                     public void onGranted() {
-                        new AsyncTask<Void, Void, List<Music>>() {
+                        new AsyncTask<Void, Void, ArrayList<Music>>() {
                             @Override
-                            protected List<Music> doInBackground(Void... params) {
+                            protected ArrayList<Music> doInBackground(Void... params) {
                                 return MusicUtils.scanMusic(mContext);
                             }
 
                             @Override
-                            protected void onPostExecute(List<Music> musicList) {
-                                mMusicList = MusicUtils.getDownloadMusicList();
-                                AppCache.get().getLocalMusicList().clear();
-                                AppCache.get().getLocalMusicList().addAll(mMusicList);
-                                lvLocalMusic.setVisibility(View.VISIBLE);
-                                vSearching.setVisibility(View.GONE);
-                                adapter.notifyDataSetChanged();
+                            protected void onPostExecute(ArrayList<Music> musicList) {
+                                if (type.equals("local")) {
+                                    mMusicList = musicList;
+                                } else {
+                                    mMusicList = MusicUtils.getDownloadMusicList();
+                                }
+                                newLocalMusicList();
                             }
                         }.execute();
                     }
@@ -123,22 +188,108 @@ public class LocalMusicActivity extends BaseActivity implements AdapterView.OnIt
                     @Override
                     public void onDenied() {
                         ToastUtils.show(R.string.no_permission_storage);
-                        lvLocalMusic.setVisibility(View.VISIBLE);
-                        vSearching.setVisibility(View.GONE);
+                        showList(true);
                     }
                 })
                 .request();
     }
 
+    private void newLocalMusicList() {
+        showList(true);
+        AppCache.get().getLocalMusicList().clear();
+        AppCache.get().getLocalMusicList().addAll(mMusicList);
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Music music = AppCache.get().getLocalMusicList().get(position);
-        AudioPlayer.get().addAndPlay(music);
-        ToastUtils.show("已添加到播放列表");
+        if (type.equals("recommoned")) {
+            playOnLineMusic((OnlineMusic) parent.getAdapter().getItem(position));
+        } else {
+            Music music = AppCache.get().getLocalMusicList().get(position);
+            AudioPlayer.get().addAndPlay(music);
+            ToastUtils.show("已添加到播放列表");
+        }
     }
 
     @Override
     public void onMoreClick(final int position) {
+        if (type.equals("recommoned")) {
+            moreOnLine(position);
+        } else {
+            moreLocal(position);
+        }
+    }
+
+    private void moreOnLine(int position) {
+        final OnlineMusic onlineMusic = recommonedMusics.get(position);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle(recommonedMusics.get(position).getTitle());
+        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(onlineMusic.getArtist_name(), onlineMusic.getTitle());
+        File file = new File(path);
+        Log.i("moreOnLine", "moreOnLine: " + file.exists() );
+        int itemsId = file.exists() ? R.array.online_music_dialog_without_download : R.array.online_music_dialog;
+        dialog.setItems(itemsId, (dialog1, which) -> {
+            switch (which) {
+                case 0:// 分享
+                    share(onlineMusic);
+                    break;
+                case 1:// 查看歌手信息
+                    artistInfo(onlineMusic);
+                    break;
+                case 2:// 下载
+                    download(onlineMusic);
+                    break;
+            }
+        });
+        dialog.show();
+    }
+
+    private void share(final OnlineMusic onlineMusic) {
+        new ShareOnlineMusic(this, onlineMusic.getTitle(), onlineMusic.getSong_id()) {
+            @Override
+            public void onPrepare() {
+                showProgress();
+            }
+
+            @Override
+            public void onExecuteSuccess(Void aVoid) {
+                cancelProgress();
+            }
+
+            @Override
+            public void onExecuteFail(Exception e) {
+                cancelProgress();
+            }
+        }.execute();
+    }
+
+    private void artistInfo(OnlineMusic onlineMusic) {
+        ArtistInfoActivity.start(this, onlineMusic.getTing_uid());
+    }
+
+    private void download(final OnlineMusic onlineMusic) {
+        new DownloadOnlineMusic(this, onlineMusic) {
+            @Override
+            public void onPrepare() {
+                showProgress();
+            }
+
+            @Override
+            public void onExecuteSuccess(Void aVoid) {
+                cancelProgress();
+                ToastUtils.show(getString(R.string.now_download, onlineMusic.getTitle()));
+            }
+
+            @Override
+            public void onExecuteFail(Exception e) {
+                cancelProgress();
+                ToastUtils.show(R.string.unable_to_download);
+            }
+        }.execute();
+    }
+
+    private void moreLocal(int position) {
         Music music = AppCache.get().getLocalMusicList().get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
         dialog.setTitle(music.getTitle());
