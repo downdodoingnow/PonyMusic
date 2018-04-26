@@ -225,9 +225,9 @@ public class LocalMusicActivity extends BaseActivity implements AdapterView.OnIt
         final OnlineMusic onlineMusic = recommonedMusics.get(position);
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(recommonedMusics.get(position).getTitle());
-        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(onlineMusic.getArtist_name(), onlineMusic.getTitle());
+        String path = FileUtils.getMusicDir() + FileUtils.getMp3FileName(onlineMusic.getAuthor(), onlineMusic.getTitle());
         File file = new File(path);
-        Log.i("moreOnLine", "moreOnLine: " + file.exists() );
+        Log.i("moreOnLine", "moreOnLine: " + path);
         int itemsId = file.exists() ? R.array.online_music_dialog_without_download : R.array.online_music_dialog;
         dialog.setItems(itemsId, (dialog1, which) -> {
             switch (which) {

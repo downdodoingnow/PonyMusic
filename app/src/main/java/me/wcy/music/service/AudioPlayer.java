@@ -6,6 +6,9 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.model.Music;
 import me.wcy.music.receiver.NoisyAudioStreamReceiver;
 import me.wcy.music.storage.db.DBManager;
+import me.wcy.music.storage.db.greendao.MusicDao;
 import me.wcy.music.storage.preference.Preferences;
 import me.wcy.music.utils.ToastUtils;
 
@@ -52,7 +56,9 @@ public class AudioPlayer {
 
     public void init(Context context) {
         this.context = context.getApplicationContext();
+
         musicList = DBManager.get().getMusicDao().queryBuilder().build().list();
+
         audioFocusManager = new AudioFocusManager(context);
         mediaPlayer = new MediaPlayer();
         handler = new Handler(Looper.getMainLooper());
@@ -82,13 +88,27 @@ public class AudioPlayer {
     }
 
     public void addAndPlay(Music music) {
-        int position = musicList.indexOf(music);
+        int position = getMusicFromList(music);
+
         if (position < 0) {
+            MusicDao musicDao = DBManager.get().getMusicDao();
             musicList.add(music);
-            DBManager.get().getMusicDao().insert(music);
+            musicDao.insert(music);
             position = musicList.size() - 1;
         }
         play(position);
+    }
+
+    public int getMusicFromList(Music music) {
+        Music music1;
+        for (int i = 0; i < musicList.size(); i++) {
+            music1 = musicList.get(i);
+            if (music1.getTitle().equals(music.getTitle()) && music1.getArtist().equals(music.getArtist())) {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
     public void play(int position) {

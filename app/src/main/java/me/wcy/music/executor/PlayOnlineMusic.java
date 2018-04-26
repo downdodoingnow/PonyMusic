@@ -60,7 +60,6 @@ public abstract class PlayOnlineMusic extends PlayMusic {
             mCounter++;
         }
         music.setCoverPath(albumFile.getPath());
-        Log.i("getMusicDownloadInfo", "getPlayInfo: " + mOnlineMusic.getSong_id());
         // 获取歌曲播放链接
         HttpClient.getMusicDownloadInfo(mOnlineMusic.getSong_id(), new HttpCallback<DownloadInfo>() {
             @Override
@@ -72,6 +71,9 @@ public abstract class PlayOnlineMusic extends PlayMusic {
 
                 music.setPath(response.getBitrate().getFile_link());
                 music.setDuration(response.getBitrate().getFile_duration() * 1000);
+
+
+
                 checkCounter();
             }
 
