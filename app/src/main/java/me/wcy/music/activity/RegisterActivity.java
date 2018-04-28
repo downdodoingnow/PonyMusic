@@ -163,9 +163,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
             hideSoftInput(etPhonenum);
 
-            //showProgress();
-            //SMSSDK.submitVerificationCode("86", mPhoneNum, mCode);
-            register();
+            showProgress();
+            SMSSDK.submitVerificationCode("86", mPhoneNum, mCode);
+//            register();
         }
     }
 

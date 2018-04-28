@@ -12,8 +12,15 @@ android {
         versionName rootProject.ext.versionName
 
         manifestPlaceholders = [AMAP_KEY: getLocalValue("AMAP_KEY")]
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "dLW9yB4KB99o1vJBezK4m2",
+                GETUI_APP_KEY   : "IpKihcyRei6rpXTpmzfq81",
+                GETUI_APP_SECRET: "hB1MmhV78A7dnmBgRRpmoA"
+        ]
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86_64"
+        }
     }
-
     signingConfigs {
         release {
             storeFile file("debug.keystore")
@@ -82,5 +89,6 @@ dependencies {
     implementation 'me.wcy:lrcview:2.0.1'
     implementation 'com.hwangjr.rxbus:rxbus:2.0.0'
     implementation 'org.greenrobot:greendao:3.2.2'
-    compile 'com.github.yuzhiqiang1993:zxing:2.1.6'
+    implementation 'com.getui:sdk:2.12.3.0'
+    implementation 'com.github.yuzhiqiang1993:zxing:2.1.6'
 }

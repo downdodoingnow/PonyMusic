@@ -2,7 +2,7 @@ package me.wcy.music.model;
 
 public class Message {
     private String message;
-    private int messageID;
+    private long messageID;
     private long time;
     private long toUserID;
     private long userID;
@@ -17,11 +17,11 @@ public class Message {
         this.message = message;
     }
 
-    public int getMessageID() {
+    public long getMessageID() {
         return messageID;
     }
 
-    public void setMessageID(int messageID) {
+    public void setMessageID(long messageID) {
         this.messageID = messageID;
     }
 

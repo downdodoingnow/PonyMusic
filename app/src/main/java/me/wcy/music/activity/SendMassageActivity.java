@@ -1,6 +1,7 @@
 package me.wcy.music.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ import me.wcy.music.model.Params;
 import me.wcy.music.model.User;
 import me.wcy.music.presenter.MessageP;
 import me.wcy.music.storage.db.UserManger;
+import me.wcy.music.utils.ChatClientSocketUtil;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 
@@ -47,10 +50,30 @@ public class SendMassageActivity extends BaseActivity implements IUserView, View
 
     private MessageP messageP;
 
+    private ChatClientSocketUtil chatClientSocketUtil;
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            String content = (String) msg.obj;
+            Message message = new Message();
+            message.setType(0);
+            message.setMessage(content);
+
+            addMData(message);
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_massage);
+
+        //开启长连接用于数据通信
+        chatClientSocketUtil = new ChatClientSocketUtil(mHandler);
+        chatClientSocketUtil.init();
     }
 
     @Override
@@ -62,11 +85,29 @@ public class SendMassageActivity extends BaseActivity implements IUserView, View
             messageP.insert(params);
 
             message.setType(1);
-            mData.add(message);
-            adapter.notifyDataSetChanged();
-            rcSendMessage.smoothScrollToPosition(mData.size() - 1);
+            addMData(message);
+            sendMsg(msg);
+        }
+    }
 
-            etSendMessage.setText("");
+    private void addMData(Message message) {
+        mData.add(message);
+        adapter.notifyDataSetChanged();
+        rcSendMessage.smoothScrollToPosition(mData.size() - 1);
+
+        etSendMessage.setText("");
+    }
+
+    private void sendMsg(String msg) {
+        JSONObject joo = new JSONObject();
+        try {
+            joo.put("userID", mUserID);
+            joo.put("toUserID", toUserId);
+            joo.put("content", msg);
+            chatClientSocketUtil.sendMsg(joo);
+            chatClientSocketUtil.receiveMsg();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -118,10 +159,9 @@ public class SendMassageActivity extends BaseActivity implements IUserView, View
                     }
                     mData.add(message);
                 }
-
                 fillData();
             } catch (JSONException e1) {
-                e1.printStackTrace();
+                //e1.printStackTrace();
             }
         }
     }
@@ -132,5 +172,11 @@ public class SendMassageActivity extends BaseActivity implements IUserView, View
         rcSendMessage.setLayoutManager(layoutManager);
         rcSendMessage.setAdapter(adapter);
         rcSendMessage.scrollToPosition(mData.size() - 1);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        chatClientSocketUtil.close();
     }
 }

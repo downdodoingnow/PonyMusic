@@ -36,6 +36,10 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <!-- 推送 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:name=".application.MusicApplication"
         android:allowBackup="true"
@@ -165,6 +169,15 @@
             android:name=".activity.PublishCommonActivity"
             android:label="@string/publish_common"
             android:screenOrientation="portrait" />
+
+        <service
+            android:name=".service.PushService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":pushservice" />
+        <service
+            android:name=".service.PushIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

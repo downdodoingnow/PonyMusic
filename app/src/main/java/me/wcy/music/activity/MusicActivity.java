@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.igexin.sdk.PushManager;
 import com.yzq.zxinglibrary.common.Constant;
 
 import me.wcy.music.IView.IUserView;
@@ -41,6 +42,8 @@ import me.wcy.music.model.Params;
 import me.wcy.music.model.User;
 import me.wcy.music.presenter.UserP;
 import me.wcy.music.service.AudioPlayer;
+import me.wcy.music.service.PushIntentService;
+import me.wcy.music.service.PushService;
 import me.wcy.music.service.QuitTimer;
 import me.wcy.music.utils.PermissionReq;
 import me.wcy.music.utils.SystemUtils;
@@ -79,6 +82,13 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
+        //initPush();
+    }
+
+    //初始化推送
+    public void initPush() {
+        PushManager.getInstance().initialize(this.getApplicationContext(), PushService.class);
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), PushIntentService.class);
     }
 
     @Override
