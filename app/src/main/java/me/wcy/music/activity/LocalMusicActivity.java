@@ -42,8 +42,10 @@ import me.wcy.music.service.AudioPlayer;
 import me.wcy.music.utils.FileUtils;
 import me.wcy.music.utils.MusicUtils;
 import me.wcy.music.utils.PermissionReq;
+import me.wcy.music.utils.ReptilianUtils;
 import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
+import us.codecraft.webmagic.Spider;
 
 public class LocalMusicActivity extends BaseActivity implements AdapterView.OnItemClickListener, OnMoreClickListener {
     @Bind(R.id.lv_local_music)
@@ -90,7 +92,6 @@ public class LocalMusicActivity extends BaseActivity implements AdapterView.OnIt
             setTitle(R.string.download_music_list);
         }
     }
-
     @Override
     protected void onServiceBound() {
         whichPage();

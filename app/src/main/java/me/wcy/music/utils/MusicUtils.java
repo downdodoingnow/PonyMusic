@@ -12,7 +12,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import me.wcy.music.model.Music;
 import me.wcy.music.storage.preference.Preferences;

@@ -177,7 +177,7 @@
             android:process=":pushservice" />
         <service
             android:name=".service.PushIntentService"
-            android:exported="false"></service>
+            android:exported="false"/>
     </application>
 
 </manifest>

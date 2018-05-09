@@ -7,6 +7,7 @@ import me.wcy.music.R;
 import me.wcy.music.service.PlayService;
 import me.wcy.music.storage.db.DBManager;
 import me.wcy.music.storage.db.HistorySearchDBManager;
+import me.wcy.music.storage.db.MusicUserDBManager;
 import me.wcy.music.storage.db.UserManger;
 
 /**
@@ -29,6 +30,7 @@ public class MusicApplication extends Application {
         DBManager.get().init(this);
         HistorySearchDBManager.getInstance().init(this);
         UserManger.getInstance().init(this);
+        MusicUserDBManager.getInstance().init(this);
 
         Intent intent = new Intent(this, PlayService.class);
         startService(intent);

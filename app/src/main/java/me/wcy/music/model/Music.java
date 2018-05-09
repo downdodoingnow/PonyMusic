@@ -83,13 +83,10 @@ public class Music implements Serializable {
         if (music.songId > 0 && music.songId == this.songId) {
             return true;
         }
-        if (TextUtils.equals(music.title, this.title)
+        return TextUtils.equals(music.title, this.title)
                 && TextUtils.equals(music.artist, this.artist)
                 && TextUtils.equals(music.album, this.album)
-                && music.duration == this.duration) {
-            return true;
-        }
-        return false;
+                && music.duration == this.duration;
     }
 
     public Long getId() {

@@ -20,7 +20,7 @@ public abstract class JsonCallback<T> extends Callback<T> {
     }
 
     @Override
-    public T parseNetworkResponse(Response response, int id) throws IOException {
+    public T parseNetworkResponse(Response response, int id) {
         try {
             String jsonString = response.body().string();
             return gson.fromJson(jsonString, clazz);

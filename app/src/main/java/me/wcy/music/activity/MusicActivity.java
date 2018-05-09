@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +21,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.igexin.sdk.PushManager;
 import com.yzq.zxinglibrary.common.Constant;
+
+import org.apache.http.conn.ssl.AbstractVerifier;
+import org.apache.http.conn.ssl.StrictHostnameVerifier;
 
 import me.wcy.music.IView.IUserView;
 import me.wcy.music.R;
@@ -34,10 +36,6 @@ import me.wcy.music.executor.WeatherExecutor;
 import me.wcy.music.fragment.LocalMusicFragment;
 import me.wcy.music.fragment.PlayFragment;
 import me.wcy.music.fragment.SheetListFragment;
-import me.wcy.music.http.HttpCallback;
-import me.wcy.music.http.HttpClient;
-import me.wcy.music.model.ArtistInfo;
-import me.wcy.music.model.OnlineMusicList;
 import me.wcy.music.model.Params;
 import me.wcy.music.model.User;
 import me.wcy.music.presenter.UserP;
@@ -83,7 +81,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         //initPush();
-    }
+        }
 
     //初始化推送
     public void initPush() {
@@ -103,7 +101,6 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         parseIntent();
 
         disableNavigationViewScrollbars();
-
     }
 
     @Override
@@ -276,7 +273,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(Keys.VIEW_PAGER_INDEX, mViewPager.getCurrentItem());
-        mLocalMusicFragment.onSaveInstanceState(outState);
+//        mLocalMusicFragment.onSaveInstanceState(outState);
         mSheetListFragment.onSaveInstanceState(outState);
     }
 

@@ -1,16 +1,13 @@
 apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
-
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-
     defaultConfig {
         applicationId "me.wcy.music"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-
         manifestPlaceholders = [AMAP_KEY: getLocalValue("AMAP_KEY")]
         manifestPlaceholders = [
                 GETUI_APP_ID    : "dLW9yB4KB99o1vJBezK4m2",
@@ -50,6 +47,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     buildToolsVersion '27.0.3'
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'org/apache/commons/codec/language/bm/gen_approx_greeklatin.txt'
+        exclude 'org/apache/commons/codec/language/bm/gen_rules_dutch.txt'
+        exclude 'org/apache/commons/codec/language/bm/ash_rules_german.txt'
+    }
 }
 
 def getLocalValue(String key) {
