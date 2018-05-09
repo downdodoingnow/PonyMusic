@@ -35,8 +35,8 @@ public class ReptilianUtils implements PageProcessor {
             /*从下载到的用户详细页面中抽取想要的信息，这里使用xpath居多*/
             /*为了方便理解，抽取到的信息先用变量存储，下面再赋值给对象*/
             String userID = page.getHtml().xpath("//div[@class='title-section ellipsis']/span[@class='userID']/text()").get();
-            String songName = page.getHtml().xpath("//div[@class='title-section ellipsis']/span[@class='song_name']/@text").get();
-            String singer = page.getHtml().xpath("//div[@class='item editable-group']/span[@class='singer']/@text']/@text").get();
+            String songName = page.getHtml().xpath("//div[@class='title-section ellipsis']/span[@class='song_name']/text").get();
+            String singer = page.getHtml().xpath("//div[@class='title-section ellipsis']/span[@class='singer']/text").get();
             int count = Integer.parseInt(page.getHtml().xpath("//div[@class='profile-navbar clearfix']/a[2]/span[@class='num']/text()").get());
             //对数据进行过滤
             if (null != userID && null != songName && null != singer && 0 != count) {
