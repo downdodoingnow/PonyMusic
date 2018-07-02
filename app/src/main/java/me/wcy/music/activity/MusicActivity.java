@@ -81,7 +81,7 @@ public class MusicActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         //initPush();
-        }
+    }
 
     //初始化推送
     public void initPush() {

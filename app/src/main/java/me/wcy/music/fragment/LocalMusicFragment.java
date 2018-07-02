@@ -41,9 +41,6 @@ import me.wcy.music.utils.ToastUtils;
 import me.wcy.music.utils.binding.Bind;
 import us.codecraft.webmagic.Spider;
 
-/**
- * 本地音乐列表
- */
 public class LocalMusicFragment extends BaseFragment implements View.OnClickListener {
     @Bind(R.id.local_music_num)
     TextView mLocalMusicNum;
@@ -75,13 +72,12 @@ public class LocalMusicFragment extends BaseFragment implements View.OnClickList
     private ArrayList<String> mUserNames = new ArrayList<>();
     private ArrayList<MusicUserSong> mSongNames = new ArrayList<>();
     private double[] mScoreList;
-
+    private int[][] mUserSongMatrix;
     //推荐歌曲数量
     private static final int NUM = 10;
 
     private final static String TAG = "LocalMusicFragment";
 
-    private int[][] mUserSongMatrix;
 
     @Nullable
     @Override
@@ -148,6 +144,7 @@ public class LocalMusicFragment extends BaseFragment implements View.OnClickList
                     Log.i(TAG, "getRcommondMusicList: 开始爬取数据");
                     //Spider.create(new ReptilianUtils()).addUrl("https://www.music.baidu.com/search?type=people").thread(5).run();
                     mMusicUsers = ReptilianUtils.mMusicUsers;
+
                     if (null != mMusicUsers && mMusicUsers.size() != 0) {
                         calculateCos();
                         insertMusicusersData();
